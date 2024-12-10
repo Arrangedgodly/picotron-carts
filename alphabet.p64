@@ -1,0 +1,125 @@
+picotron cartridge // www.picotron.net
+version 2
+
+:: gfx/
+:: gfx/0.gfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIwOjM2OjE0Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMCAwNjoyNjo0MCIscmV2aXNpb249MjI3XV1sejQA8QEAAHkyAADzIXtbMF09e2JtcD1weHUA
+QyAICAQgFzBXACcQVxBHMPcEMBcsZmxhZ3M9MCxwYW5feAgAynk9MCx6b29tPTR9LD4AYFcQBxA3
+AAQAQlcQRyAMAB-HRAAc-wAAVwCXIEcgR1AXIKcAVwA_ABwAdgCwJxAHICcABzA3MDcIAF8QJxBH
+IEcAHr9HIBdQNzA3MBdQ94QAHVL3AlAXUEIALxdQ-gAgzzA3ACcQFwA3ABcQtwIBHxAX_AAAvQEB
+vgAPuwAdEQC1AG8XUBcg9wA8ACIyIBcABABPRzAnMEIAHKEXIEcQJwAXACcQPgEABgFPEFcgJ0YA
+HRZQAgAPvAEenxcwRxD3FQAXADwBH94nIFcQZwA3AGcQVyBHfAEP_wEUAQIAHpf3AQ8_ABQ-9wEA
+dgIiUhAXEBcAOwIAhAFfVzAXABdFABwkZwD9AWJnAGcARyDCAh83iwAdr-cAYGcQZ2D3AAC8AiYA
+AgAfIDcDIgIAAQ54BA8-ABpvJwBXIDcQQQAffwAXAPcVEEc5Ah4UF3QAMDA3IL0FD0IAIQB0AhBn
+MQMfAXcBH49AJxBXAFcARzMEHF8QEATw8DEACx84MQD---------------------------------
+------------------------6lBtPTh9fQ==
+:: gfx/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIxOjIwOjUyIixtb2RpZmllZD0iMjAyNC0x
+Mi0xMCAwNjoyNjo1NiJdXQ==
+:: map/
+:: map/0.map
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIwOjM2OjE0Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMCAwNjoyNjo0MCIscmV2aXNpb249MjE2XV1sejQAZwAAAFYQAADwCHt7Ym1wPXVzZXJkYXRh
+KCJpMTYiLDMyAwAvIjABAP--------------------vxCCIpLGhpZGRlbj1mYWxzZSxwYW5feD0w
+CADCeT0wLHRpbGVfaD04CQDAdz04LHpvb209MX19
+:: map/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIxOjIwOjUyIixtb2RpZmllZD0iMjAyNC0x
+Mi0xMCAwNjoyNjo1NiJdXQ==
+:: sfx/
+:: sfx/0.sfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIwOjM2OjE0Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMCAwNjoyNjo0MCIscmV2aXNpb249MjE2XV1sejQAoAAAAAsKAAD-MHB4dQADKAAABAAED0AQ
+Ag4AAaABIAKgDgAPEAAN8MoBAgNADw_QBAUGB0AMkAgJCgtADJAPDA8NDw4MQAzw-wEA6-8nqgEQ
+Bg8gEAEgASAB8AACEAIOEAEgDyEgATAPQPDDDygP--DGD-gKD-8PgA-3Dw0B8AkBEAYOMAD-----
+-70f-wEArM-ID0AADxBA--_w8P8BAP-qUP----8p
+:: sfx/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIxOjIwOjUyIixtb2RpZmllZD0iMjAyNC0x
+Mi0xMCAwNjoyNjo1NiJdXQ==
+:: main.lua
+--[[pod_format="raw",created="2024-12-09 20:36:14",modified="2024-12-10 06:26:40",revision=308]]
+function _init()
+    active_frame = 0
+    tick_counter = 0
+    gurpy = {6, 20, 17, 15, 24}
+    games = {6, 0, 12, 4, 18}
+    
+    -- Calculate number of repetitions needed
+    sprite_width = 8 * 5  -- 5 sprites * 8 pixels each
+    sprite_height = 32    -- Total height of both rows
+    
+    cols = math.ceil(480 / sprite_width)
+    rows = math.ceil(270 / sprite_height)
+    
+    back = userdata("u8", 480, 270)
+    
+    -- Animation variables
+    bob_speed = 0.125
+    bob_time = 0
+    letter_offset = 0.75  -- Phase offset between letters
+end
+
+function get_letter_bounce(index, time)
+    -- Add phase offset based on letter position
+    local offset_time = time + (index * letter_offset)
+    return math.sin(offset_time) * 2
+end
+
+function _draw()
+	 set_draw_target(back)
+	 
+    cls(theme"desktop0")
+    
+    pal(7, theme"desktop1")
+    
+    -- Iterate over rows and columns to fill the screen
+    for row = 0, rows - 1 do
+        for col = 0, cols - 1 do
+            local base_x = col * sprite_width
+            local base_y = row * sprite_height
+            
+            -- Draw upper row (gurpy)
+            for i = 0, 4 do
+                local current_frame = (active_frame + i) % 5
+                local bounce = get_letter_bounce(i, bob_time)
+                spr(gurpy[current_frame + 1], 
+                    base_x + (8 * i), 
+                    base_y + (sprite_height/2) + bounce - 4)
+            end
+            
+            -- Draw lower row (games)
+            for i = 0, 4 do
+                local current_frame = (active_frame + i) % 5
+                local bounce = get_letter_bounce(i, bob_time + math.pi)  -- Offset by pi to create alternate pattern
+                spr(games[current_frame + 1], 
+                    base_x + (8 * i), 
+                    base_y + (sprite_height/2) + 8 + bounce + 4)
+            end
+        end
+    end
+    
+    set_draw_target()
+    blit(back)
+end
+
+function _update()
+    -- Update bobbing animation
+    bob_time = bob_time + bob_speed
+    
+    -- Update sprite animation
+    tick_counter += 1
+    if tick_counter == 15 then
+        active_frame += 1
+        if active_frame == 5 then
+            active_frame = 0
+        end
+        tick_counter = 0
+    end
+end
+:: .info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIwOjQwOjMwIixtb2RpZmllZD0iMjAyNC0x
+Mi0xMCAwNjoyNjo1NiIscnVudGltZT0xMix3b3Jrc3BhY2VzPXt7bG9jYXRpb249Im1haW4ubHVh
+IzYxIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJnZngvMC5nZngiLHdvcmtzcGFjZV9p
+bmRleD0yfSx7bG9jYXRpb249Im1hcC8wLm1hcCIsd29ya3NwYWNlX2luZGV4PTN9LHtsb2NhdGlv
+bj0ic2Z4LzAuc2Z4Iix3b3Jrc3BhY2VfaW5kZXg9NH19XV0=
+:: [eoc]
