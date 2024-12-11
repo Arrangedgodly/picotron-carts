@@ -1,0 +1,1409 @@
+picotron cartridge // www.picotron.net
+version 2
+
+:: gfx/
+:: gfx/0.gfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTA5LTAzIDA2OjA2OjI0Iixtb2RpZmllZD0iMjAyNC0w
+OS0wNCAwNjoxMjo0OCIscmV2aXNpb249MjNdXWx6NAB_AAAAEjEAAPMhe1swXT17Ym1wPXB4dQBD
+IBAQBPBWBxAHwBfQF8AHEAfwVixmbGFncz0wLHBhbl94CADLeT0wLHpvb209OH0sPgAf8DEA----
+------------------------------------------------------------11BtPTh9fQ==
+:: gfx/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTA5LTAzIDA2OjA2OjI0Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMSAwNTo1Mjo1MyJdXQ==
+:: GUI/
+:: GUI/gui.lua
+--[[pod_format="raw",created="2024-08-24 13:05:27",modified="2024-12-11 05:00:23",revision=7562]]
+--[[ 
+"gui.lua" by 369px and Hessery
+The structure of this GUI is divided in 2 different GUIs
+One for the search element (which doesn't need to be initialized more than once)
+And one for the main gui, divided in 2 macro containers: Sidebar and Page Content.
+--]]
+
+include("GUI/guiFunc.lua")
+include("GUI/utils.lua")
+include("GUI/sidebar.lua")
+
+function gui_init()
+	
+	gui = create_gui()
+	
+	-- Sidebar
+	local sidebar = gui:attach {
+		x = 0, y = searchbar_height,
+		width = 90, height = window_h - searchbar_height,
+		clicked=false,hovered = false, t_hover = 0,
+		t_hide = 40,	closed=false,
+		elements_h=15,
+		
+		draw = function(self) fillBg(self,32) end,
+		update = function(self) updateSidebar(self) end,
+		click=function(self) self.clicked=true end,
+		release=function(self) self.clicked=false end,
+		hover = function(self) 
+			if (not self.closed) hoverElement(self) --in GUI/utils.lua
+		end,
+		
+	}
+	
+	
+	
+	-- Document display
+	docCont = gui:attach{
+		x = sidebar.width, y = searchbar_height,
+		width = window_w - sidebar.width,
+		height = window_h - searchbar_height,
+		data = "",
+		update=function(self)
+			if self.x != sidebar.width then
+				self.x = sidebar.width
+				self.width = window_w - sidebar.width
+				if not sidebar.closed then
+					self.child[1].child[1].x = docScroll.width/2 - docScroll.width/4 +5
+				else
+					self.child[1].child[1].x = 5
+				end
+			end
+		end
+	}
+	
+	docScroll = docCont:attach {
+		x = 0, y = 0,
+		width = window_w - sidebar.width - 15,
+		height = #docCont.data * 11,
+	}
+	
+	docCont:attach_scrollbars{autohide=true}
+	
+	doc = docScroll:attach{
+		x = 5, y = 7,
+		width = docScroll.width, height = docScroll.height,
+		update = function(self)
+			updateElementHeight(self) --in GUI/utils.lua
+		end,
+		draw = function(self)
+		
+			color(0)
+			
+			if #docCont.data == 1 and docCont.data[1] == "" then
+				print("This page is empty...", 53, 10, 6)
+			elseif docCont.data[1] == "404: Not Found" then
+				print("This page is missing...", 53, 10, 6)
+			else
+				local content = docCont.child[1]
+				local startLn = flr((content.y * -1)/11)
+		
+				for i = 0, min(18,#docCont.data) do
+					local ln = docCont.data[i+startLn]
+					if sub(ln, 1, 2) != "> " then
+						print(ln,2,-8+((startLn+i)*11))
+					end
+				end
+				
+				local div = 100
+			end
+		end,
+	}		
+	
+	function sidebar:draw() fillBg(self,32) end
+
+	--we init pages list here cause we need to re-init it when the user wants 
+	--to reopen sidebar, scrollbars are also in here!
+	initSidebarList(sidebar) 
+
+	function gui:click() clickAnywhere() end
+
+end
+
+function search_init()
+	search_gui = create_gui()
+
+	search_container = search_gui:attach{
+		x = 0, y = 0,
+		width = window_w, height = searchbar_height,
+		draw=function(self) drawSearchContainer(self) end
+	}	
+
+	search_bar = search_container:attach_text_editor {
+		x = 15, y = 1,
+		width = window_w, height = 12,
+		margin_top=2,
+		bgcol=18,fgcol=7,
+		focused=false,
+		
+		key_callback = {
+			enter = function(self) searchBarKeyEnter() end
+		}
+	}
+	
+	search_bar:set_text("Search...")
+	
+	--We use this invisible container to make the text editor act professionally
+	local search_events_container = search_container:attach {
+		x = 0, y = 0,
+		width = search_container.width, height = search_container.height,
+		txt_to_search="",
+	
+		click=function(self) clickSearchBar() end,
+		update=function(self) updateSearchBar(self) end
+	}
+end
+:: GUI/guiFunc.lua
+--[[pod_format="raw",created="2024-08-28 07:10:20",modified="2024-12-11 05:00:23",revision=4740]]
+--[[
+	
+	PAGE CONTENT and SEARCH GUI FUNCTIONS
+
+	CONTENT: generate_code_block, setPage
+	
+	SEARCH: clickAnywhere, clickSearchBar, drawSearchContainer
+ 			  searchBarKeyEnter, updateSearchBar
+ 			  
+--]]
+
+-- Sets the page that is currently being viewed
+function setPage(path)
+	-- For selected page highlighting in sidebar
+	selectedPath = path
+	
+	-- If page doesn't exist then goto welcome page
+	if fstat(path) == nil then path = "/appdata/docs/pages/Welcome.txt" end
+	
+	docCont.data = split(fetch(path), "\n")
+	
+	-- Remove previous code blocks
+	removeAllChildren(doc)
+	
+	local was_code, code_o0, code_lines
+	for o = 1, #docCont.data do
+		
+		-- Create code blocks
+		local is_code = sub(docCont.data[o], 1, 2) == "> "
+		if not was_code and is_code then
+			code_o0 = o
+			code_lines = {}
+			add(code_lines,sub(docCont.data[o], 3))
+		elseif was_code and is_code then
+			add(code_lines,sub(docCont.data[o], 3))
+		elseif was_code and not is_code then
+			generate_code_block(code_lines, code_o0, o-1)
+			code_lines = nil
+		end
+		was_code = is_code
+	end
+	if was_code then
+		generate_code_block(code_lines, code_o0, #docCont.data)
+	end
+	
+	for o = 1, #docCont.data do
+	
+		-- Rich text
+		docCont.data[o] = richText(docCont.data[o])
+		
+	end
+	
+	docScroll.height = #split(fetch(path), "\n")*11 + 15
+	store("/appdata/docs/doclast.txt", path)
+end
+
+-- Coloured text
+function richText(str)
+	if not str then
+		return
+	end
+   
+	str = str:gsub("[%w%p]+%(%)","\fc%1\f0")
+	str = str:gsub("\'([%w%p]+)\'", "\fp%1\f0")
+	
+	return str
+end
+
+-- Generates an inline code block
+function generate_code_block(lines, ln0, ln1)
+	local code = doc:attach_text_editor{
+		x = 0, y = (ln0 - 1) * 11,
+		width = docScroll.width, height = (ln1-ln0+1)*11+3,
+		syntax_highlighting=true,
+		bgcol=18,fgcol=7,curcol=29,selcol=2,--style I experimented
+	}
+
+	code:set_keyboard_focus(false)
+	code:set_text(lines)
+	
+	-- Invisible element needed so user can't click on the text editor
+	doc:attach{
+		x = 0, y = (ln0 - 1) * 11,
+		width = code.width, height = code.height,
+		
+		click = function(self)
+			set_clipboard(table.concat(code:get_text(),"\n"))
+			notify("Copied to clipboard: "..table.concat(code:get_text(),"  "))
+		end
+	}
+end
+
+
+--FUNCTION RELATED TO THE SEARCH TEXT-EDITOR
+
+function clickAnywhere() --used to reset the text bar when we click outside of it
+	local input_txt = search_bar:get_text()[1] --get the text
+	if (input_txt == "") search_bar:set_text("Search...") --if it's blank, show "Search..."
+	search_bar:set_keyboard_focus(false) --set focus to false
+	search_bar.focused=false 
+end
+
+function drawSearchContainer(el)
+	fillBg(el,18)
+	circ(10,5,3,29) line(8,7,5,10,29) --search icon
+	line(0,el.height-1,el.width-1,el.height-1,29) --bottom line
+end
+
+function searchBarKeyEnter() 
+	local str_to_search = search_bar:get_text()[1]
+	pages = search("/appdata/docs/pages", str_to_search)
+	gui_init()
+	search_bar.focused = false 
+	search_bar:set_keyboard_focus(false)
+end
+
+function clickSearchBar()
+	if not search_bar.focused then --if search bar not focused already
+		search_bar.focused = true 
+		local input_txt = search_bar:get_text()[1]
+		if (input_txt=="Search...") search_bar:set_text("") --set text to blank
+	end
+	gui_init()	
+	search_bar:set_keyboard_focus(true) --set focus to true!
+end
+
+function updateSearchBar(el)
+	if key"ctrl" and keyp"f" then
+		clickSearchBar()
+	end
+	if search_bar.focused then -- if search bar is focused
+		local input_txt = search_bar:get_text()[1] --get text
+		
+		if input_txt != el.txt_to_search then --if text is not the same as last check
+			
+			pages = search("/appdata/docs/pages", input_txt) --update results
+			
+			--if no pages are found, show all results!
+			if #pages==0 then 
+				pages = search("/appdata/docs/pages", "") 
+			end
+
+			el.txt_to_search = input_txt --update it
+			
+			gui_init() --regenerate page
+		end		
+	end
+end
+
+:: GUI/purple.pal
+b64$LS1bW3BvZCxtb2RpZmllZD0iMjAyNC0wOS0wMSAwODozNDozOCIsaGlkZGVuX3RvZ2dsZXM9
+e30sbG9ja2VkPXt9LGJnX2NvbG9yPTAsY3JlYXRlZD0iMjAyNC0wOS0wMSAwNzozNjo1MCIsaGlk
+ZGVuPXt9LGJsYWNrZXN0X2NvbG9yPTAsb2twYWxfdmVyc2lvbj0iMC4wLjQiLHJldmlzaW9uPTMx
+Nix0ZXN0X2N1YmVfY29sb3JzPXtbMF09ezE1LDMxLDR9LHszMSw0LDIwfSx7NCwyMCwyMX0sezEw
+LDksMjV9LHs5LDI1LDI0fSx7OCwyNCwyfSx7MjYsMTEsMjd9LHsxMSwyNywzfSx7MjcsMywxOX0s
+ezI4LDE3LDE5fSx7MjgsMTIsMTZ9LHsxMiwxNiwxfSx7NiwyOSwxM30sezI5LDEzLDE4fSx7MTMs
+MTgsMX0sezcsMjMsMTR9LHsyMywxNCwxM30sezE0LDMwLDE4fSx7Nyw2LDIyfSx7NiwyMiw1fSx7
+MjIsNSwyMX0sezEsMSwxfSx7MSwxLDF9LHsxLDEsMX19LHdoaXRlc3RfY29sb3I9N11dbHo0ABgB
+AAAVAgAA9QV1c2VyZGF0YSgiaTMyIiw2NCwiMAEAwDFkMmI1MzAwN2UyNQgA8BcwMDg3NTEwMGFi
+NTIzNjAwNWY1NzRmMDBjMmMzYzcwMGZmZjFlOAgAQDAwNGQIABFhNgBgZmZlYzI3CgAgZTQ4AEAy
+OWFkJABgODM3NjljIAAxNzdhOADAY2NhYTAwMWM1ZWFjMADwHWE1YTEwMDc1NGU5NzAwMTI1MzU5
+MDA3NDJmMjkwMDQ5MmQzODAwYTI4ODc5QADwA2FjYzUwMGMzMDA0YzAwZWI2YkYAYDkwZWM0MgoA
+IGIywACgNjRkZmY2MDBiZIkAAJYAQDBkYWJAADA4NTa4AO8zZWRmYTAwZTZkYWY1MAEA2VAwMDAi
+KQ==
+:: GUI/sidebar.lua
+--[[pod_format="raw",created="2024-08-31 01:16:01",modified="2024-12-11 05:00:23",revision=3399]]
+-- SIDEBAR RELATED FUNCTIONS
+-- closeSidebarAnimation, drawListElement, initSidebarList, initSidebarElements, 
+-- openSidebarIcon, sidebarElNotShown, tapListElement, 
+-- updateListElement, updateSidebar 
+
+function updateSidebar(el)
+	hoverTimer(el) --in GUI/utils.lua
+	if (not el.clicked) closeSidebarAnimation(el,15)
+end
+
+function closeSidebarAnimation(el,speed)
+	if not el.hovered and el.t_hide > 0 
+	and not search_bar:has_keyboard_focus() then
+		if not settings.sidebarAlwaysOpen then el.t_hide -= 1 end
+		
+		if el.t_hide <= 11 then
+			
+--			if not sidebarAnim then
+--				removeAllChildren(el.child[1])
+--				el.t_hide = 1
+--				el.width = 0
+--				el.closed = true
+--				openSidebarIcon(el)
+--			else
+				if el.t_hide==11 then removeAllChildren(el.child[1]) end
+				if (el.width > 0) el.width -= speed
+				--if (el.width<=#el.child[1].child) el.child[1].child[ 
+				if el.t_hide == 1 and el.width == 0 then 
+					
+					el.closed=true
+					openSidebarIcon(el)
+					
+				end
+--			end
+			
+		end
+	end
+end
+
+function openSidebarIcon(sidebar) 
+	gui:attach{
+		x=0,y=search_container.height,
+		width=0, default_width=settings.sidebarOpenWidth,--30,
+		height=sidebar.height,
+		hovered=false,
+		
+		draw=function(self) 
+			rectfill(0,0,8,self.height,13)
+			print(">",2,(self.height/2)-5,6)
+		end,
+		hover = function(self) 
+			 self.hovered = true
+		end,
+		
+		update=function(self)
+			
+			if self.hovered then
+				
+				if (sidebar.width == 0) then 
+					-- ??
+				elseif sidebar.width == 90 then
+					initSidebarList(sidebar)
+					sidebar.closed = false
+					sidebar.t_hide = settings.sidebarStayTime
+					self.hovered = false
+					self.parent:detach(self)
+					return
+				end
+				
+				-- Snap to open
+--				if sidebarAnim then
+					sidebar.width+=15
+					self.x-=2
+--				else
+--					sidebar.width = 90
+--				end
+			elseif self.width != self.default_width then
+				self.width+=2
+			end
+		end,
+		
+	}
+end
+
+function initSidebarList(sidebar)
+	
+	sidebar_elements = {} --used to store all sidebar elements
+
+	if not sidebar.closed then --we only need to init these once at bootup!
+	
+		local scrollable = sidebar:attach {
+			x = 0, y = 0,
+			width = sidebar.width, height = #pages * sidebar.elements_h,
+			
+			update = function(self) 
+				updateElementWidth(self) 
+				initSidebarElements(self, sidebar_elements)
+			end
+		}
+
+	
+		local scrollbar = sidebar:attach_scrollbars{autohide=true}
+	
+	end
+	
+	for i = 1, #pages do
+		add(sidebar_elements, {
+			id = i,
+			y = (i - 1) * sidebar.elements_h,
+			page = pages[i],
+			displayed = false,
+		})
+	end
+end
+
+function initSidebarElements(scrollable,table)
+	
+	local table_start = flr(abs((abs(scrollable.y))/scrollable.parent.elements_h))
+	local table_end = ((abs(scrollable.y)+scrollable.parent.height)/scrollable.parent.elements_h)+1
+	local el = table
+	
+	for i=table_start, table_end do
+	--	local current_el_id = (el[i].y/11)+1
+	
+		if el[i] and el[i].displayed==false 
+--		and (el[i].y/11)+1 >= table_start and (el[i].y/11)+1<=table_end
+		then
+			el[i].displayed = true
+			--printh("i\t"..i.." "..el[i].page.title.." "..el[i].y)
+			--printh(scrollable.parent.elements_h.."")
+			
+			scrollable:attach{
+				x = 0, y = (el[i].id - 1) * scrollable.parent.elements_h,
+				width = scrollable.parent.width, height = scrollable.parent.elements_h,
+				page = el[i].page,
+				hovered = false, t_hover = 0,
+				
+				draw = function(self) drawListElement(self, self.page.title) end,
+				tap = function(self) tapListElement(self,self.page.title) end,
+				hover = function(self) hoverElement(self) end,
+				update = function(self) updateListElement(self,el[i]) end,
+			}
+		
+		end
+	end
+end
+
+function drawListElement(el,title)
+	local page = el.page
+	local x = page.depth*5+5
+	local y_start = (el.height/2)-3
+
+	if selectedPath == el.page.path then
+		fillBg(el, 18)
+		print(page.title, x, y_start, 7)
+	elseif el.hovered and not page.is_folder then
+		fillBg(el, 13)
+		print(page.title, x, y_start, 7)
+	else
+--		fillBg(el, 32)
+		if page.is_folder then
+			print(page.title, x, y_start-2, 18)
+			line(3,el.height-1,el.width-13,el.height-1,33)
+		else
+			print(page.title, x, y_start, 0)
+		end
+	end
+end
+
+function tapListElement(el,title)
+	if not el.page.is_folder then
+		setPage(el.page.path)
+		docCont:mousewheel({wheel_y=1000})
+	end
+end
+
+function updateListElement(el,table_el)
+	if sidebarElNotShown(el,table_el) then
+		el.parent:detach(el)
+	end
+	
+	hoverTimer(el) --in GUI/utils.lua
+	updateElementWidth(el)
+end
+
+function sidebarElNotShown(el,table_el)
+--flr(abs((abs(scrollable.y))/11))
+	if el.y < abs(el.parent.y) - 18 * 2.27
+	or el.y > abs(el.parent.y)+el.parent.parent.height
+	then
+		table_el.displayed = false
+		return true
+	end
+end
+:: GUI/utils.lua
+--[[pod_format="raw",created="2024-08-31 01:16:17",modified="2024-09-20 03:08:57",revision=2443]]
+-- GUI UTILITY FUNCTIONS (GUI functions used by multiple files/elements)
+-- fillBg, hoverElement, hoverTimer, removeAllChildren
+-- updateElementHeight, updateElementWidth
+
+-- Fills the background of a gui element
+function fillBg(self, col)
+	rectfill(0, 0, self.width-1, self.height-1, col)
+end
+
+-- Function to remove all childern of a parent element.
+-- used to remove code blocks from doc (the page content)
+function removeAllChildren(el)
+	for child in all(el.child) do
+		el:detach(child)
+	end
+end
+
+function hoverTimer(el)
+	if el.t_hover > 1 then
+		el.t_hover -= 1
+	elseif el.t_hover == 1 then
+		el.t_hover -= 1
+		el.hovered = false
+	end
+end
+
+function hoverElement(el)
+	el.t_hover = 2
+	el.hovered = true
+end
+
+-- if parent element has a different width, update it
+function updateElementWidth(el)
+	if (el.parent.width != el.width) el.width = el.parent.width
+end
+
+-- if parent element has a different height, update it
+function updateElementHeight(el) 
+	if (el.parent.height != el.height) el.height = el.parent.height
+end
+:: GUI/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTA4LTMxIDAxOjEzOjAyIixtb2RpZmllZD0iMjAyNC0x
+Mi0xMSAwNTo1Mjo1MyJdXQ==
+:: pal/
+:: pal/0.pal
+b64$LS1bW3BvZCxoaWRkZW49e30sYmxhY2tlc3RfY29sb3I9MCxiZ19jb2xvcj0wLGNyZWF0ZWQ9
+IjIwMjQtMDktMDEgMDc6MzU6NTkiLGhpZGRlbl90b2dnbGVzPXt9LGxvY2tlZD17fSxtb2RpZmll
+ZD0iMjAyNC0wOS0wMSAwODozNDozOCIsb2twYWxfdmVyc2lvbj0iMC4wLjQiLHJldmlzaW9uPTMx
+NCx0ZXN0X2N1YmVfY29sb3JzPXtbMF09ezE1LDMxLDR9LHszMSw0LDIwfSx7NCwyMCwyMX0sezEw
+LDksMjV9LHs5LDI1LDI0fSx7OCwyNCwyfSx7MjYsMTEsMjd9LHsxMSwyNywzfSx7MjcsMywxOX0s
+ezI4LDE3LDE5fSx7MjgsMTIsMTZ9LHsxMiwxNiwxfSx7NiwyOSwxM30sezI5LDEzLDE4fSx7MTMs
+MTgsMX0sezcsMjMsMTR9LHsyMywxNCwxM30sezE0LDMwLDE4fSx7Nyw2LDIyfSx7NiwyMiw1fSx7
+MjIsNSwyMX0sezEsMSwxfSx7MSwxLDF9LHsxLDEsMX19LHdoaXRlc3RfY29sb3I9N11dbHo0AAkB
+AAAVAgAA9QV1c2VyZGF0YSgiaTMyIiw2NCwiMAEAwDFkMmI1MzAwN2UyNQgA8BcwMDg3NTEwMGFi
+NTIzNjAwNWY1NzRmMDBjMmMzYzcwMGZmZjFlOAgAQDAwNGQIABFhNgBgZmZlYzI3CgAgZTQ4AEAy
+OWFkJABgODM3NjljIAAxNzdhOADAY2NhYTAwMWM1ZWFjMADwHWE1YTEwMDc1NGU5NzAwMTI1MzU5
+MDA3NDJmMjkwMDQ5MmQzODAwYTI4ODc5QADwA2FjYzUwMGMzMDA0YzAwZWI2YkYAYDkwZWM0MgoA
+IGIywACgNjRkZmY2MDBiZIkAAJYAQDBkYWJAAF84NTZkMAEA6VAwMDAiKQ==
+:: pal/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTA5LTAxIDA3OjM1OjU5Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMSAwNTo1Mjo1MyJdXQ==
+:: editSources.lua
+--[[pod_format="raw",created="2024-09-22 00:42:06",modified="2024-09-28 03:45:01",revision=406]]
+parent_window = env().parent_window
+parent_pwd = env().parent_pwd
+
+include "lens.lua"
+
+window {
+	width = 158,
+	height = 200,
+	workspace = "current",
+	resizeable = false,
+	title = "Docs - Edit Sources",
+}
+
+theme = {
+	bg = 7,
+	heading = 18,
+	text = 0,
+	btnBgUp = 6,
+	btnBgDown = 5,
+	tileBg = 15,
+}
+
+
+sources = fetch("/appdata/docs/sources.pod")
+gui = create_gui()
+gui_s = gui:attach({ x = 0, y = 0, width = 158, height = 200 })
+
+gui_s:attach_scrollbars({autohide = true})
+
+-- Track tiles why?
+tiles = {}
+
+-- Create a tile for each source
+for i = 1, #sources do
+	add(tiles, gui_s:attach({
+		x = 4, y = 4 + (i - 1) * 60,
+		width = 138, height = 50,
+		src = sources[i],
+		draw = function(s) 
+			rectfill(s.x, s.y, s.x + s.width, s.y + s.height, theme.tilebg) 
+			color(theme.text)
+			print("Url:", s.x + 2, s.y + 2)
+			print("") --s.src.url)
+			print("Version:")
+			print(s.src.ver)
+		end,
+	}))
+	tiles[i].te_url = tiles[i]:attach_text_editor{
+		x=34,y=2,
+		width=100,
+		height=12,
+		max_lines = 1,	
+		key_callback = { 
+			enter = function() end,
+			tab = function() end
+		}
+	}
+	tiles[i].te_url.set_text({"test"})
+end
+
+-- Create a add tile button
+
+function _update()
+	gui:update_all()
+end
+
+function _draw()
+	cls(theme.bg)
+	gui:draw_all()
+end
+:: events.lua
+--[[pod_format="raw",created="2024-09-01 08:16:55",modified="2024-09-28 20:37:34",revision=1011]]
+function initFocusEvents()
+	on_event("lost_focus", function(msg)	
+		pal(32,7)
+		pal(33,6)
+	end)
+	
+	on_event("gained_focus", function(msg)	
+		pal(32,32)
+		pal(33,33)
+		setPage(fetch("/appdata/docs/doclast.txt"))
+	end)
+	
+	on_event("changed_setting", function(msg)
+		if msg.setting == "sidebarAnim" then
+			-- Toggle sidebar animating
+			--settings.sidebarAnim = settings.sidebarAnim ~ 1
+			
+		elseif msg.setting == "sidebarAlwaysOpen" then
+			-- Toggle sidebar always open
+			if settings.sidebarAlwaysOpen then 
+				settings.sidebarAlwaysOpen = false
+			else 
+				settings.sidebarAlwaysOpen = true
+			end
+		end
+--		elseif msg.setting == "update" then
+			-- Update the pages
+--			rm("/appdata/docs/pages")
+--			create_process(pwd().."/main.lua")
+--			stop(1)
+--		end
+		
+		-- We should save settings here
+		store("/appdata/docs/settings.pod", settings)
+	end)
+end
+:: label.png
+b64$iVBORw0KGgoAAAANSUhEUgAAAeAAAAEOCAYAAABRmsRnAAAmMElEQVR4Ae2dL5CjPhuAc52K
+SiRy5UrkyZOVlZEnkZWVlZWVlSsjK1eeXIlcuRKJrDjxzf36pZumCQQKFOjzzDCEN-9fII-9cSry
+vwIAAAB6ZT7IVR3jaWV5lbM39ja9vZljAEBLAvb9kH38cG0fdKu83ph6j22u4xjXX4dvD-Y76CJf
+dcatszdfu7L_9_Stz721-W128R22vTc9BoyaYnP_BqLd_V3az8HnteubbfJ9NOnf1FlV33_d9Zv-
+VGA-t4Dv_eHKNvSIn7XuATPEQ8XeQ1eHctf773LdY3y3ZflAbvAA_epysYlFsYnDJNzmP3DPN2-3
+7fu8qSlfv4BdG9GD101CF5v0rcmsK3uu83LMOezyvS-ZXo9rrpB5yvrZfevmoOn_XXsrW4vvHYbG
+6uSr63fb1nvt6zsEgGa4-js7VuJEt4CrDr_6C2pbzuahZh5G9gFli8jV5t7ENx3HdYiW7bVKUiFr
+vHfPvrHL9ubbh2v-PsmExtraX8h76eK9PuI7rLMfgKZnf91vbmy41hyQD7eA6xwkQ0pen3M-cp9D
+OBBD5VJ3raF5bfjBT_4A6HKtemwkDFXfif19NP1mzD5Nv_068z74X-cLWG-Cldimm29zs2UvvOuk
+tjGXKakx-3C_PZj1dX6IkLZdvut7x_7zvXb9zeu9IF8YKvd_m1X9O-6X3QK_56d7lFRcB59_rtqP
+q17HXOO2dcjah2fTPYSux25XJsl79u_bo_64rvzUzf8j3m3T9-qo77DLAw4GTbTLRbGJRbGJRbQ7
+f0vF5vzO9XOjb_SR302Tf8L1b-Xwn-w4FfnfQX0RU-3hfYfrFPbs2tuU31vozzz0nLTx3pocdgAg
+-hl4TgoeyFSlxXslBwBQyY9Yqr_1e2VKiER_382YXbb7wQ1fy3OuXt6v8-O1lFcx3c5s6_sLAACP
+JV0uS_vnrc2khazLECxfU6Y_kbrqQvsCAMDwaC5gLdtMfctXi9csQ5CEq3h5V5d2pmhD_gIAwFQE
+jGhbxRRqSLuvpbyUQ-sCAMAUBOyTcvZ-GSDlWvL9Wn7nyxaqlq2rTVVfAAAYLj9iqf72NpsWNAAA
+wMRJl8vS_hkpAgAA6B8EDAAAgIABAACeg-ldvTMlRCKvn4W4jsFgUIe1EEIIme6D4lVj_drbdWXj
+67ZfH4dL7OVnetUm2ipRbL_-qbK2U1vzPUTb--_P-8dcDwA8ntld8nXJOJG3dTAIymRSR7515wkd
+__Vn6hRZSLtnXHMIxVZeLgAYFvPG8kW0g0Ed1jfi0LG2xBo6R_i85nhVAnEJbYprVof11TrbencA
+MCUBu0DID5OvfVCHHuRaKFUC8o3hmkOm_0pR2evrKy9DX3MoXx_Hq_eXn6m3bbQ9-5PFVvKzAExG
+wFq2mTrLV0vYrIPOMeVhCidEErqvT7wwjHdpUyZcE1O60VYhYYBJCNgUrS7DQw9uLV1dRqrjw3x-
+Ztnm6_PQSMgAMAUB_8jUtaChl0PbFrFM986466D3HfDmoV41nms9rjl0zB6vjGh7-qairRLF1v9d
+TWHNoYT20esQQpSuAwAew49Yqr_9zaYF-QTkn0e_LgCYBPHriiQ0IF0uS_vnpKgb_Z7eyAMATIPF
+7yMS7gAEjHwBAEo5vSFhBAzwRMRHeSnnK0VCABCwECKzDoPk-weFjutn8B6oNhywUPZdxEfJNwK9
+nE18Z0MXsEuymboWMRJGstDpYWl_T64DlEMVQr8n_1viexm6gH1kvLiqgxM5QxuHpS67DkwOUYAp
+C1iLNjGkkqnzMxJGsvDwby0_nv9NvjuAKQnYJV07DjfoAxE5Q18S1t8d3xeUfSfm2cS3MnQBw10H
+IkAo_mDU3455WLpiHKjA2TQefsRS-a3dKzNeVvL9o1-iZszXb6of8udRnN74sABgWix_CxG-rkhE
+DdLlsrR_3mhUn2B9cQAAAGhBwFDK4jc5AAAABNw76_WeJADApNi-r0lCy8xIAQAAQP-MG-XK1PVz
+Iq-rzGdwslwtL_X34zsJAQBAwIG4JGuLGbzyNaVrP9vs1DnXG9lNfndKdjY2AAC4mbU6mkvKT8DX
+UoqvZdjeXbJ9P76L5WpZKseNVBcRAwDA_Jk37pmpp5auKd_X93MuvpZSLD6Pnc21kf-P_f-FXBXT
+8nbF7TFd4wEAwNAEbEo3U0h42d3_fQJ1lavqXc8uESNhAIChChiueHkPF9b78V0sV0vxfny-xOzn
+EDlqKZu4YsgUAGBKAs6MQz0xDn0dz9R1fOLy-Vp_73XxeSxtr2W7XC2vpOzDlG6ZWKvkDAAAUxCw
+T65PIl2XhEPQ8q2Sri1aLVQtWDOmn_1YyHgukZfJv_oZAADC_RFL9be32bLpH9b551Gsl-tS_QIA
+jI39_1rErysSUYN0uSytn5GifkC_AACAgAEAAB7MvFGvTF0-J-I6rp8nytdSipd3KwcGy9WSLwsA
+JsX_nRwMQ8AuyWbqWsQTl3AZP1cvfFlt-PC7t9L6zXZFkgBaYrc9koTRCLhKyCPia3le_8u7uno2
+Y3YcAGCK-Fq9Xj3-OX6SlI6YNe6ZqfPlio9Ixl9LKV7e1X_XLV4zZrYDAHgG_fpi0A7zRr1MwZrC
+HZl8TQkDAAAMX8AuRirffwJ_eVd8CQAAMAIBZ4awTOn64gOX79fye60_GdvtAAAA_hewS64jEa5P
+rr5nXxkAAKB-AQMMlI1UJAGgBjslScKDmJECAAAABAwAAICAvWTq_rLjPfP1cRBfH4fJvJQoXlwu
+X8zXxqyDM6tN0qhPnX4hbXdKtrJ_31xNxweAxzBv3DOxfvZMfcfMcg_8-EwnI_AoXogiP1XG-r0C
+HTPrfW2fmeMua9SnibjL5LuRqtN9bqTqZR4AaIdZayP1KNwpU_QnEcULEcWL0lhZf-hmtUmuRKqf
+bbn64ma9r_wbK2RdVX112bcPABgv88Y9M3UrXlesJ15_puLr4yBefqaTkPC-dEbx4lJ2xbSQka6f
+4y67EdVxl10kput1rK7czbFcsbJxXe3smG99oXMAwNQEbEtXP_u7GeuJqchXS9WWrh1DvMPFFn5f
+fQHgGQTs4gHSnSIuqYaKFiEPg_MuqyVb3X61Sa7KAICA3bLVaOkm8juOiB8iavBLzpSbS5im8Mx2
+up-dxtWvaqwqUbvGs_OhcgeA4fMjlupvb7OZ4m6Rr4-Df-eXn_nDE5p-HpFjS_x3b6X1m_3qNia7
+_cbaYKfkZX1a7F2ND1Dnu-l3du22R-Fr9eps8_f4Kbb7VMSvt-8c_EmXy9L6_RQ2OQTxAlRhyrFt
+_drjA8DwmZECAAAABAwAAPAUzBv1ytT1cyKv68xn8LL9fbh_fksvcbNs1kE5O8W3BwBTFrAtXZ_Y
+oVrCDrGasX9lW9QAADB_Zq2NlCm3lKGekH8fKoXraqNjyBoAYBzM7xKuEEi3BeH_d39LL-cyif4n
+Wd32-2UzBgAAUxawKd1MfT9rKZsxKBdwA3HagjaljYgBAKYs4DIpI9_HSFvH-okYCQMATFXAmboV
+L7Qj198Hp0j183-X-9to8drPAAAwVQGXSRchh8vWIcuQWNUzAAAMnxkpAAAAQMAAAAAIGAAAAIYk
+4ExdX75Yz6jDulGfJv1g2CyieFDjPHqOttbZ9lrtMe1y17kZS_41xeZ6vfYzjIt5456JDIsNGHVY
+C5nub8qt-jDFia8skChakIQBcyryVoW1iGJxKvKbObqaz7cngEcxm8Im1GEt1GEdHLPjQogr_drt
+zLvZ1zeWLRWusKsPFlF8c6jXjVVJwW7j6xc6lt3WHjtkjrprDs2lr9xEnF2t05cL13sK2U9oTkPX
+W2ziy_WKm8__uN0XxsG8cc9Mne_JLI-1IF8tT1OUZkym_6uYKV3dx25fNo9vDhg2iygWpyK-Kdsx
+u53dvoqmc4Ssu8689665KSFjmXnVffSa676-Ju9ez1kn92Xv8968RrtzXbGJL2U7Fu3yq-qyvjBl
+AdvSTaQ7NgJCJYpgpy3mEKmYB-e94zURWpN_j1hznXzW3Vvbue16znv6Fpv_9wpjEPBEqJIuPId8
+tQSqDkuznU8cdcbrg77X3PX_6wrbFn7dPdwzZ51caNlGu3P7YhNflQEBf5Op73Ii-bEekOleqMPa
+G9OCtdvJdB-crmrePiUexQtR5Ce_3MAD0DxEzUNYH4yug9kVs8e696CvI4Smfdtesy2W0NzVfV_2
+AH3zudqEyNucxyVKW76hebwnr1q25rNLvGbc7uOTPwyXH7FUf3ubzZT0RMk-j50K8pkEvN_9ldZv
+tiv_YAiWjZbh0MRUbOJSmfbFbnsUv1avzro-x0_x3acifuWfq0O6XJbWz0nR8IjixffP_X-ZmjEA
+_CZUqEMT7_V-H4B84TEg4AHKV0vXFUPEAADTYEYKAAAA_mfeqFemrp8TeR3XzwAAAOBk1rhnIr8v
+LV-zGRpR5CcRxYvLZccAAGAazJ89AeqwFjLd35QfLeGQGAAAPKOAM3W_J7I8NhG_Pg5Xzy8-U74e
+AACo5Nfq9er5z-HzDgHb0tXP_m7GBo5M90Id1peyD4QLAAD3ylfH-hw-Gwp4QqjD_iJes2zz9XFA
+yAAA0BrNBJyp73Iiv_86rmMTAuECAMDjBewT7AjFK9O9swzD4dfq9er5z-GTpADA6JmRAhiTfH0x
+AAAEDAAAAAgYAABgOgLO1PXli40cdVhXxn1t4PEsolgsoviha0jeo1rPQ99Pk3fwiL25xhpC7sb2
+-qBb5s1PFul-noiAZbp-yLxRvLiUi-x08wxhB92pyG-Kj5ZxtiyuYtmycMbL9jMmQtbc197GmD_Y
+NrNnT4A6rL1l89kV02VX23vkW_Sny2WK15Yx1D94F1EsFlF8IwA75pKnvsyY3cZu3yX2unW5aj9m
+fVUufGOG5MzXp6pf1XxN1hzy3ttYX5O_ZXvwPcOzCzhT58sVT_ToEyPT-Y18Zbq-iuuyHYdhSNd1
+qJ2K-FLni3k-_WUhsmVRKdbkPbq0bUu0LqG41m3GQ-ITkgt7zNCcudbgyn-o3lxrdo2p5zXXbK_l
+bI6qfd3T15eD0L4wLeaNepmCNYU7EfkOkShe-Jf6Ij_RjBoSNg8488B3Ca4pWrhd7sPcQ8ieu8hj
+mzlrsrcyIU6Ve3PThD-Hz6vnX6tXDpNBCXhiqMN6MGsp8tNFtqZwEW87B1dozCdaIUSnsu2Tew72
+vqXgm9d8z1MWcZ8g3KELOFPGqSQnLWV1WAuZ7oVM905Rm3GZ7luTMHzz5-hZ_4A4FfnlQNYHtBnT
+z66Y97O3xJstC5G8R1d3M961iOz99TVmaM50G1OSbe-NXotvDHst9_Sv7dyXfavmfcj-GzTjRyzV
+395mM8U9UfLPIwJtif3uzfvz-zl_is121dtaTMG2OU5b4wLcy257LP3ftvtUxK-9-XNTIF0uS3M6
+J0UwdP4cP6_efR90l7QlSXsc5AvwvCBgGDyPEC4AQNfMSAEAAMBYBJyp68uOjwh1WHfaHobPIopL
+n4eyxq7X5Rq-7pxV7ZvuoY93EprjNvIEIIQQ88Y9E3krZR0zyxNDpnu_GuhdvqciJxEdcyryxiLl
+-UAZf46fV8_-Vq9CCCFmpEYIdVgLdVjfFbPj8Hhp6csVN599cV-fqkP6njnq7q9sDrvcpH-d3FSt
+_Z48PGLeunm2c93GPn3zwHj4J1zz0swbj5ip8z2R33c7NhJkur-IVKb7y92M6XamaO12bRLFi-9S
+WeSn0jZl9aFtpsqpyC8Hly7bsVORX9X7_rra1JnX7l9W55OHHtvX17cP1x5C8uCKueazY2V5aZqH
+qndS1bfpvHXyVCXV0Pcd_m5hPPw5ft4IubmATcFm6lu_Om6WR0rbQq0r32eVZtdUHZRV8jAP5Tpz
+uPqErKWO-Osc0E3zcG-fR73Ppvlvc6-3jIV8x40Wrk0zAT8BMt0HtelL1FG8EEKIi5j1sy-uij2b
+1G1hmiJrchi6xnHNGTpHX4eqPU9beRgC96ylqu_9ebK-EyQKNrNGvTL1fSXyHEvkbWzE8lWH9eXS
+6LIZk_k_SNZ1RRvFi6tykZ9EkZ9uZKrjdjtTtnbfZ_FU5DcH4CKKbw5TX9w_TPVVdpCGjGW3q3u4
+m32bHOp18mDHXOsO3XPVeCFCNNu1lUO7b9W_7Lh998k3ZK33vlsYFz9iqf72NlumJpdALWMt4fzz
+eCW-phI2x7DFaQvX18_OueqHzH739l-h1_r1Kv7n_PnfYbXZrkoPaw4wgHB22_PNv2b_c9t9KuJX
+-z8Ht6TLZWlO56ToPrR4u2ZM4mwbLdw6IF8AGDozUjB8ivwkonhxuVzxsnYAADA85qRgmMINibni
+Zc__MQAAoH9mjXpl6vqy4z3z9XEQXx8H3iaUsojiu-qG9L9nDgBAwGEk8vvS8tXPPUv45WfKm4RO
+ORU5SQCAgQgYYOAsolgsojg4ZsZd7ew_dtm81xkLAJ6TeeOemTrfE-l917EH8PIzFV8fB-HyM_Wt
+ghBCiFORXwSoy3bMrDOF6eobMp-dvulYADB9Zo16JfL7MqWrYw8A_YLNIorFIoqDpFnVrut1AMDz
+MScFMFX5nor8Uq6SsN2nTboYEwDGz6xRr0x9X4m8jZsxgAdwKnKxiOIb_eqYKV07Zva15anH841v
+x81ns63dDwCejx_xVH97my1TnQz79XH47-7yM314QvPPoyjy093jRPHi35ZKx4riReVcIW2arq-O
+uFXtXfX73VvpmJvtij8YoCV226P4tXp11v05fortPhXxK-9cHdLlsjSn8ylscgjifaTcAABgfMxI
+wXikHMWLq2df3BcLHd9uW3fusr51xgMAmDJzUjA80Zr3Ij_JKF6IIj9d4kV_uombdTZ2Xx-mmPa9
+am7XPHZfXzvfeAAACNhFps73RJbHoBY_GZkC65vQudtuBwCAgF3ytSVrxlz1cLeYHzVPyNxRvLi0
+KxNsnXbb9YEXDwCj5s-xU-xavd7EhBBi1vpsmSLjHUgxiheXyxUva_eSW0i7pnP72vhivvEAAKYi
+YfPS-Iil_nuXZBN5HUvkuazjTybn-POIPFpiv3srrd9sVyQJoCV226P4tXr1CmS7T0X8yj9Xh3S5
+LK2fNR45kd_ytWUMAAAAHQkYAAAAGjNv1CuRQmTqu_yLAQAAQIsC9kkW8QIAAAQxIwUAAAAIGAAA
+AAEDAADA0AScqfPlij8IdVg36tOkX9P5QonihYjiRWWb0LGejUUUO8uudnZ9aN821la3n6tv22ts
+Mp5vbW3nwCZ5jxr1qdMvpK3dJnT8Lr4vGA-zxvJN5KDk21SgMt3flB9NFC9EkZ-4OnvgVOQ3h_Cp
+yDufs4ngdD_zPJT1ufLYB9myaNSnibjL5GuvQ89Rtb6uvzUYNrNWR3NJuSeRqsM6OGbHhRBX8rXb
+uPrpsm_8LqSsL-1sxu125rMr-owsovhyVbXx1YW0K5vP1S_0XeghHrJPcz9l8-rGqprDHiNk-03E
+Z4pUP9ty9cXNel-ZN1ab32PTd9ckZzAs5o17Zuqh0jVFqOVpStGMyXR-Faszni7bsTpj1hWteS-y
+k4jihSjy01W7srjuX_Qnb7tnRctqEcU34tL1roPNbO8rh8xnj_-q7xrf7Fc2X9V6fPL1rc_1h9A5
+qnJYN5c3R9CyuJFhtiwuotT1OlZX7uZYrliTccu_tTr7b5ozGBazxj0Teb60iKEVtCi1PE3ZailX
+CTykHTQThxlzibrrNbgE6TrUq9am92PfH5XfPnN5D8l7dCP9tgh9d2PLGfiZk4Iz6rAWMt0PXsxR
+vLiUXfI120G7B6MpqVBh6UOyT8Hpuew1u9Zl3h8l4UfKvy7ZshjEuzPbwXiZNeqVSCEydb4SaXyd
+6vreAzLdC3VYC3VYO2NaqmZMt61qVyVk19xdEMWLy2XKt8hPl7jr2dfumaQZekC5hOQazx67avxT
+kV8dpPb4rrHMmO7rivn2EdLOHNc__KsO9rL9u-ZQ9k5CxvIeQ_-R1d0nzOQ9ulyu-mYbV7_QsZrg
+_uZC312dbxuGy49Yqr_9zdajmB9F-nm8kiQ0Z797K63fbFeDXn-VQQrTyV3yHolsWXifx8BuexS-
+Vq-Ouj-HT7HdpyJ_HfY-NzTS5bK0fkaKALoB_T5P7mzZjk2_8BgQMAAAAAIGAABAwOVk6nxVxQAm
+wCKKxSKKBzuma5w212uPVWfs0LZt57cs13Vz32RtXe4HpsG8sXwT6Y_56gFGzKnIWxfaqcg7X-PY
+ctzX_2v7fQI0YdbaSAgXBoQ_XBdRfHXQ2s9mzOxjj_Obw9XWNUfoel3jhK7Xjvn6_cZpM5d1cxKy
+z6q_VWsLeQdV__njW4DnYd64Z6bc4s0UMobBSPhU5M5nXbZjdbDHcs1ZJTRznJA5XOO74jpWtnff
+Hlxr8M1bNZ6vr28O37sLfcdlawsdp8m30XTf8NzMGvdM5PnSIka_rRLFCxHFi_D6qvZVc5U9jxXX
+4beI4tqiLTu07bFCDlxTVlM7oNvKrxZY07Ga9O17PoB5ayMh31blW_Sn0jZFfroSpf0MYVLWB32T
+A1ePxcHbTU7Msez31sU66szBtwBtMGvUK5Fn4drS1bFMkdmWhewqV-XRlytuj_eKT03oWrb6MuPm
+4Wu2cx22VW3uXVvTPZgx_27WNxFNyPp8bUL6utYdsl5XPkLeX9n7rPuO79k3PDc-Yqn_9jbbE4g5
+-zyKIj_1IlshhCjyk4jixWVMX7mszm7XdJy_2e-eSus321Ur85gHLsCzstsexa-Vq7Puz-FTbPep
+iF-b_eeehXS5LK2fk6JhYQu3bWzBA_IFMEVrS-hfDLoBAU8YLVstc1PsiBgAfBKGfpiRguFT5CcR
+xQunNO2Y_Vzkp4twy8YpGx8AALrhRyzV30Y9M3W_J7I85urTEeqwFjLd955Ec97883glvUcRxYtB
+rOMe9ru30vrNdtXZ3IsoFqcir4wBTIXd9lhav92nIn7t7p_bIulyWVo-ayzfRN7KV8c6Fi1UM3b5
+DhHkCwBt0kzALkwZ94w6rIU6rINjdrzNeWEYLKL4cjfLvvqyOrtcNq6rLQCAi3njnpm6Fa8r1oN8
+Zbq-lF0xme6vYmV8fRyunl9_prXm-fXryFc1IAmfiryynW6j25_K-Kavjtn9dDv7Xmd_AEDA9dCS
+zdR32RUbGT7h1mH7_1ri0IzodXFX-0fJzxY1AEC7ArYZsXRNvj6u5dmGkGG6uCT-KPEDwDMIOJFn
+4eqyL9YDMt0LdVh7YzLdO9vpuE2ocH3zwrBluYji2m3N8iKKSwVrz6HbVvUDgOfjRyzV395m04Ke
+MPnnUayXiLgNotdFaf1muyJJAC2x2x5L67f7VMSv-HN1SJfL0voZKRrgj6Bkoz51_jWZAwCGw8vP
+lCSMHAQ8QDZS9dIHAMYr36_PAxIeOXNSMCx2Sl4JVT-bkvXFzXpzDNd4vjkBYBxoCX99HEjGCJk1
+7pmp8_WKQ2NcEtxIJTZSXUSphaqvOnK3_5gxl5wBYBwShmcRcKaESOT5Qr6jZ6ck8gVAwjAKAZdJ
+eWSow9pZfiY2Ul0uABgXLz-T-66vjwPJGBnzu4QrxCil2wT74375mXYyz06d87lT0ivEjVSXdvrZ
+7K9larZx9asaCwCGex7pM8gsw7j4EUv1t5F8tXh1WQtZ4xKz3WYgqMNaCCGETPd3j5V-HsV6ef84
+IET0uiit32xXJAmgJXbbY2n9dp_K_JV-rg7pcllaP29tJlvII0Ed1hfxmmWbr4-D1fPLz5SvCwAA
+GtNMwIk8i9YU78RBuAAA0Cazxj0T6ZbvyIQs072zDAAA0CVzUtA_27eUJLTAfvdGEgBgssxIAQAA
+AAIGAABAwKVk6nzZz3Z8xKjDujLuawOPZRHFN5eOtzV2aH1V_5D52szLEN7Nve2b5nQI_y9bz9DW
+B90ybyzfRN7GXbERI9N973NG8eK-VBb5ia-zDk5FfjnQdLmtA7NqvFORXx2k9nPTvYA-xwBjZPbs
+CVCHtbdsPrtiuuxq2xTE2z2LKL45vF2xe8ar28e1Hl_7svWXrcM1pm-eOvtyzR2a47pzNH2vrr4h
+eQ19byH7D3kfXXyfMFzmjXtm6nxPZHlspMh0fyNbme6vxKvb6HhXRPECQbfIqcgvh9qpyC93M1Z1
+YOpxQvva44T20XPUWX-VWG2u0VXn6utaY908lLWrmvOed1C1Drt-6Ni_NTb9PuGZBKwlm6lz2Rbx
+BCQ8BKJ4gXR7oExcTQR2zzoeccA_ct5H71W-V1N_ddbr6tP2vh6RJxiygCeEOqwHu7YiP4koXlzK
+0A2PkE_bax-rAf2IvOt82RJ2ydkn7qp8t72vMX_f4GfWqFcihcjU_UrkOaafzdgEpKzvMt0LdVjf
+yNoXb1vCpoihmwNZX0372oekPZZ_dvUxpeA66EMO-JBD2py7bN6yfVXlrmx-5j7q5L0qx1Vz2uPr
+OnPsOntt63sKGfOe7xOGzY9Yqr_9zZapySc0-zyKIj-dNYYWrS3de8cdG-vdW2n9ZrviD3aICKAJ
+u_2xtH67T0X8yj9Xh3S5LK2fk6LhYYr22aQLzUC8AONjRgoAAAAQMAAAAAIuJVPnqyo2QdRhzZcD
+rbGIYrGI4kGso82_Xe5pCPkCuJd5Y-kmsjoGAJUiORX5JPc21X0BtMXs2ROgDuubsjqsL5fdNiQG
+w5GbvuyY69mMu9pWzVM1d911m8_h62m6Ft8cIeO5_vrGaZqnkHdZljvX8z3vCKAN5o17Zup8T2R5
+bKTIdH8RrEz3l7stbbsdDEe_pyK-ieuYWX8q8suzfS8byzdmVXuX9MxxXPOGjtl0La62rvld47ni
+Oha6tjIJhr7LOvkKzQtAl8wa90zk_dLS9cUmjjqsr4QMw0AfyPbB7oqVHdIhbe12vrl9AjkV_Y34
+fPLqai19jdfmu6y7j7bHBLiXOSnwi1UIIWS6L22j67uWcBQvRJGfguqr2j6ThPXhqw9cM1YluBDp
+_ca0564jCt8a_15LVV6ajOeSYJN32cX3AdA3s0a9EilEps5XIv2xESDTvVCH9Y1AZbq-kq_rna-v
+o0G_50NVX-pw1Qd_yKFvti1r7xrTNXddKdWVbxtrsfu7cuAbz_5r38vmrFpX6B7MNdjv3LyXjdkk
+7wBN_RFL9be32TI1iqSow-pKvnXIP493CTCKFxeJRvHiMlZZ2RSv2d9sa8fHwH73Vlq-2a74g0eO
+KXt4LLvtsbR_u09F-Mo-V4d0uSytn5OiW5rKty1M_ZqyDRGxKVtXH4AhgXjhmZmRgvHQVKTIFwAA
+AcMd0izyk4jiBckBAHhqAWfqfNnPdhxaF7OWsC6bUtZlRA0AMGx_xFL9bSTfRNavfwIx559HUeQn
+vqwW2O-eSus32xVJAmiJ3fZYWr-dpyJ_5Z_rQ7pcltbPSNF9qMPaWQYAAOhGwJk6X654IsksAABA
+JwJO5PkyJYx8AQAAOhYwAAAANGbeqFcihcjUd-mJkeleqMOaLwkAAHoQsE_8Typjme75kgAAoCcB
+AwyQjVQkAaAGOyVJwoOYkQIAAAAEDAAAgIBLydT5qopNkK_l7GzsKF6IKF5cymbcVYZqVpukUZ86
+-ULa7tT3d-P_O726m7z-Tq-idtnVp4wmfcrWaO4DAPoWcKaESOT5csWeQMJdUuQnEcWLyx3u47jL
+eulTJd_NrP4v3n_nYvl2EMu3wyXmK4fSpE8ZG6mQMMDDBDwxvpZSfC2-DxT9bMZc7WD4rDaJWG2S
+m2czVhY3631l31ghUqyS4-vvVLz-Tu9uY7f3lc3n0DUCQDPmjXtm6nxP-i_kRN7GRiLfl-fzus2y
+HbPbdU2Rn5zxKF546_CW4y67keFxl11Eqet1rK7czbFcsTrjavnp_-LtIJZvh1K5vv9OL4I0y01o
+axwA6FrAWrKZ_pavHRuRhMcA8h0HtvDrCLCJ-MoE-YhxAKBrAU_Il3c1mLXYgtXPiHc8HHdZr-PV
+FbZPvnocRAzQD7NGvRIpRKbOVyL9sZHI92spL1dIO5uvj-sPQOiG1Sa5uvuEudokl8vV32zj6hcy
+VlMxuqSon5dvB-H_O71cdn1VH1PidgwAuuVHLNXf3mbL1OQS_PVxEC8-vw_t-PMoivzEl9UC_91b
+af1mu7qNyeF_YzslB72_Z9sHfL-Pf2fXbnssbbfdpyJ_vf3nwE_6XJbWz0jRfZjyBShjKtJCvgDt
+gIABAAAQMAAAwHMwb9wzU_d7IstjI0Id1kKme76KEbNT4-z2AOD5mDWWbyJv5atjWsQAAADQooAn
+hjqshTqsr559cVc7u-wIonjBiwQAGBHzxj0zdb4n8vuuYyOTr0z3TqHquMZsZ9cBAADUYda4ZyJv
+patjE8AlWHVYX0m6C6J4cbnMmN3Gbg8AAONiTgrCUIf1RcqmhLsQcpGfLnLVZZ_szbYAADB1ASdS
+iEx9lzWu2MCR6T5IoqHtuqRKyAAAMHUB_yQ7IvHaci17rtuuDdH_SyeyBQBAwNAjtniL-CSieHF1
+N_PwzUYqkgBQg52SJAEBT4P4dXUlybal7JIzAECXbPepiF9XJAIBj0fCTbmn77MdCgBwH-toHXSm
+wVAEnKnr50Rex-Xzk0sYAADAx6xRr0R_X6aUdcwWNAAAALQg4DKQLwAAQMcCzpQQifQ-AwAAQMsC
+dskW_QIAAHQsYAAAAGjMvLWREilEpr7LAAAA0IGAXZJFvAAAAEHMSAEAAAACBgAAQMAAAADQDfNG
+vTJ1-ZzI6zrzGS7k719CCCHi5Uuj-l8fB-HyM708R9vzeyi23-m22wAAwDCZNeqVyO_rTMxwRVPx
+_uRbbKUotvIi4n-tXn6m4uvjQLIBAAbOvNXREvmUEs7fv24kq2NV0rXb5e9fIl6_BPc35QsAAONh
+dlfvTJ2l_8RoYerLjplyLutrtjPjVfItts_dfwCA5xMw8u2MKvFqkC8AwDMKGAAAABozb3W0TH3f
+E-kUCYyXLyJ--7p6NmPx8uWmT-7_FdSujGIrRbQ957vYPkeuAQCmxI9Yqr_9zaYFDY34_jiIl5-p
+3W0AAKB70uWytP5-liUYv4t6KmsAAAAQdEVYdExvZGVQTkcAMjAxMTAyMjHjWbbBAAAAAElFTkSu
+QmCC
+:: lens.lua
+--[[pod_format="raw",created="2024-04-16 23:51:32",modified="2024-09-28 03:45:01",revision=679]]
+
+-- Lens client for sending debug messages to the Lens app.
+Lens = {
+	LEVEL_DEBUG = 0,
+	LEVEL_INFO = 1,
+	LEVEL_WARN = 2,
+	LEVEL_ERROR = 3,
+}
+
+do
+
+local _pid = nil
+
+local _get_pid = function()
+	if _pid == nil then
+		for p in all(fetch("/ram/system/processes.pod")) do
+			if p.name == "lens" then
+				_pid = p.id
+				break
+			end
+		end
+	end
+	return _pid
+end
+
+local _traceback = function()
+	local lines = split(debug.traceback(), "\n")
+	local trace = {}
+	-- first line of traceback is just formatting
+	-- second and third lines are local trace so skip those too
+	for i = 4, #lines do
+		local item = {}
+		_, _, item.file, item.line, item.type, item.name
+			= lines[i]:find("%s*(.*):(%d+):.*in (%a+) '(.*)'")
+		add(trace, item)
+	end
+	return trace
+end
+
+Lens.log = function(value)
+	send_message(_get_pid(), {
+		event = "log",
+		value = value,
+		level = Lens.LEVEL_INFO,
+		trace = _traceback(),
+	})
+end
+
+end
+
+
+:: main.lua
+--[[pod_format="raw",created="2024-08-24 12:53:56",modified="2024-12-11 05:00:23",revision=8272]]
+
+--[[ 
+Docs
+ By Hessery
+  With thanks to 369px and pancelor
+
+ Docs was created with these four pillars in mind:
+ - Feel good (fast and easy)
+ - Editable
+ - Accurate
+ - Helpful
+]]
+
+
+function _init()
+	
+	include "lens.lua"
+	include "search.lua"
+	include "events.lua"
+	include "GUI/gui.lua"
+	include "updateFiles.lua"
+	
+	appdata_create()
+	settings_init()
+	check_for_updates()
+
+	window_w = 310
+	window_h = 210
+	
+	searchbar_height = 14
+	
+	local open_in_current_workspace = true
+	
+	window {
+		x = (480 - window_w) / 2,
+		y = (270 + 20 - window_h) / 2,
+		width = window_w,
+		height = window_h,
+		workspace = open_in_current_workspace and "current",
+		title = "Docs",
+		resizeable = false,
+		autoclose = false,
+	}
+	
+	--palette change
+	fetch"GUI/purple.pal":poke(0x5000)
+	
+	child_window = nil
+	
+	menuitem {
+		id = 3,
+		label = "Settings",
+		shortcut = "CTRL-O",
+		action = function()
+			if child_window then kill_process(child_window) end
+			child_window = create_process("settings.lua", { parent_window = pid(), parent_pwd = pwd()})
+		end
+	}
+--	menuitem {
+--		id = 4,
+--		label = "Edit Sources",
+--		shortcut = "CTRL-P",
+--		action = function()
+--			if child_window then kill_process(child_window) end
+--			child_window = create_process("editSources.lua", { parent_window = pid(), parent_pwd = pwd()})
+--		end,
+--	}
+	
+	-- Refresh gui
+	pages = search("/appdata/docs/pages/", "")
+	search_init()
+	gui_init()
+	
+	-- Get last page
+	if fstat("/appdata/docs/doclast.txt") == "file" then
+		local page = fetch("/appdata/docs/doclast.txt")
+		if fstat(page) == "file" then setPage(page) end
+	else
+		setPage("/appdata/docs/pages/Welcome.txt")
+	end
+	
+	initFocusEvents()
+	
+end
+
+function _update()
+	gui:update_all()
+	search_gui:update_all()
+end
+
+function _draw()
+	cls(7)
+	print(welcome)
+	gui:draw_all()
+	search_gui:draw_all()
+	
+	local cpuUsage = stat(1)
+	if child_window != nil then 
+		send_message(child_window, {
+			event = "performance",
+			cpuUsage = cpuUsage,
+			fps = stat(7),
+		})
+	end
+	-- What is this saved for?
+	-- ?string.format("\#0\x8f%0.3f %d\n\x8c%0.3f   ",stat(1),stat(7),stat(0)/0x1000000),1,190,7
+end
+
+-- Makes a folder and returns if it already existed
+function guarantee_folder(path)
+	if fstat(path) == nil then 
+		mkdir(path)
+		return true
+	end
+	return false
+end
+
+-- Sets up appdata/docs/pages on first time run
+function appdata_create()
+	guarantee_folder("/appdata/docs")
+	local noPages = guarantee_folder("/appdata/docs/pages")
+	if noPages then update_pages() end
+end
+
+-- Kills another process, usually just our own children <3
+function kill_process(process)
+	send_message(2, {event="kill_process", proc_id=process})
+end
+
+function settings_init()
+	if fstat("/appdata/docs/settings.pod") then
+		settings = fetch("/appdata/docs/settings.pod")
+	else
+		settings = {
+			sidebarOpenWidth = 50,
+			sidebarStayTime = 30,
+			sidebarAnim = false,
+			sidebarAlwaysOpen = true,
+		}
+		store("/appdata/docs/settings.pod", settings)
+	end
+end
+:: search.lua
+--[[pod_format="raw",created="2024-08-27 17:49:37",modified="2024-09-28 11:09:30",revision=1001]]
+-- Search
+--   By pancelor, and Hessery
+-- Search is a modified version of tree, from Picotron Utilities:
+-- https://github.com/Rayquaza01/picotron-utilities
+
+
+-- returns a flat list of files in path
+-- each entry has this structure:
+-- {
+--   path = "/appdata/docs/pages/API/Tables/deli.txt",
+--   title = "deli"
+--   depth = 2,
+--   is_folder = false,
+-- }
+function search(path, str)
+	local output = {}
+	local function visit_folder(path, depth, target)
+		local files = ls(path)
+		assert(files, "could not open path "..tostr(path))
+--		if not files then return end
+		
+		local anymatch
+		-- files first
+		for i = 1,#files do
+			local full = path.."/"..files[i]
+			if fstat(full) ~= "folder" then
+				local ext = files[i]:ext()
+				local title = ext and sub(files[i],1,-2-#ext) or files[i]
+				if string.find(string.lower(title), target, 1, true) then
+					if title != "manifest" then
+						add(output, {
+							title = title,
+							path = full,
+							depth = depth,
+							is_folder = false,
+						})
+						anymatch = true
+					end
+				end
+			end
+		end
+
+		-- then folders
+		for i = 1,#files do
+			local full = path.."/"..files[i]
+			if fstat(full) == "folder" then
+				local title = files[i]
+				add(output, {
+					title = title,
+					path = full.."/",
+					depth = depth,
+					is_folder = true,
+				})
+				if string.find(string.lower(title), target, 1, true) then
+					-- match everything in this folder
+					anymatch = true
+					target = ""
+					visit_folder(full, depth + 1, target)
+				elseif visit_folder(full, depth + 1, target) then
+					anymatch = true
+				else
+					-- no matches; remove this folder's entry (the most recent entry)
+					deli(output)
+				end
+			end
+		end
+		return anymatch
+	end
+	local ret = visit_folder(fullpath(path),0,string.lower(str))
+	
+	return output
+end
+:: settings.lua
+--[[pod_format="raw",created="2024-08-30 03:05:41",modified="2024-09-28 11:39:53",revision=4606]]
+parent_window = env().parent_window
+parent_pwd = env().parent_pwd
+
+window {
+	width = 150,
+	height = 200,
+	workspace = "current",
+	resizeable = false,
+	title = "Docs - Settings",
+}
+
+theme = {
+	bg = 7,
+	heading = 18,
+	text = 0,
+	btnBgUp = 6,
+	btnBgDown = 5,
+}
+
+cpuUsage = "--%"
+fps = "??"
+
+btns = create_gui()
+
+-- These buttons should one day be put in a scrollable 
+-- and put into their own .lua file
+btns:attach{
+	x = 2, y = 16,
+	width = 40, height = 10,
+	label = "Force Update",
+	bgC = theme.btnBgUp,
+	draw = function(self) btnDraw(self) end,
+	click 		= function(self) self.bgC = theme.btnBgDown end,
+	release	= function(self) self.bgC = theme.btnBgUp end,
+	tap 		= function(self) 
+		-- This is a dumb way to delete the pages, 
+		-- and then restart the process, but it works.
+		
+		-- And now it doesn't :(
+		include("updateFiles.lua")
+		rm("/appdata/docs/pages")
+		create_process(parent_pwd .. "/main.lua")
+		kill_process(parent_window)
+		kill_process(pid())
+	end,
+}
+btns:attach{
+	x = 2, y = 76,
+	width = 40, height = 10,
+	label = "Keep Sidebar Open",
+	bgC = theme.btnBgUp,
+	draw = function(self) btnDraw(self) end,
+	click 		= function(self) self.bgC = theme.btnBgDown end,
+	release	= function(self) self.bgC = theme.btnBgUp end,
+	tap 		= function(self) settingChange("sidebarAlwaysOpen", "toggle") end,
+}
+
+-- Draws a standard settings button.
+function btnDraw(self)
+	rectfill(1, 0, self.width - 2, self.height, self.bgC)
+	line(0, 1, 0, self.height - 2, self.bgC)
+	line(self.width - 1, 1, self.width - 1, self.height - 2, self.bgC)
+	self.width = print(self.label, 2, 1, theme.heading) + 1
+end
+
+-- Sends a string to the main app to change a setting.
+function settingChange(setting, value)
+	send_message(parent_window, {
+		event = "changed_setting", 
+		setting = setting, 
+		value = value
+	})
+end
+
+--------
+
+function _update()
+	parentAlive()
+	btns:update_all()
+end
+
+function _draw()
+	cls(theme.bg)
+	color(8)
+	print("WARNING: Currently clobbers", 2, 28)
+	print("/appdata/docs/pages!")
+	color(theme.text)
+	print("Update pages from their")
+	print("sources.")
+	
+	print("Toggle the sidebar being", 2, 88)
+	print("permenantly open.")
+	
+	rectfill(0, 0, 200, 11, 6)
+	print("CPU: "..flr(cpuUsage * 100).."% + "..flr(stat(1) * 100).."%", 1, 2, 5)
+	print("FPS: "..fps, 80, 2, 5)
+	
+	btns:draw_all()
+end
+
+function parentAlive()
+	local proc = fetch("/ram/system/processes.pod")
+	for i = 1, #proc do
+		if proc[i].id == parent_window then return end
+	end
+	send_message(2, {event="kill_process", proc_id=pid()})
+end
+
+on_event("performance", function(msg)
+	cpuUsage = msg.cpuUsage or 0
+	fps = msg.fps or "??"
+end)
+:: update.lua
+--[[pod_format="raw",created="2024-09-13 07:03:10",modified="2024-09-14 11:15:01",revision=218]]
+window {
+	x = (480 - 150) / 2,
+	y = (270 - 75) / 2,
+	width = 150,
+	height = 114,
+	title = "Docs - Update",
+	resizeable = false,
+	workspace = "current",
+}
+log = {}
+
+function _draw()
+	cls(18)
+	local dots = t() % 3
+	local str = "."
+	for i = 1, dots do str = str .. "." end
+	print(" Please wait while ", 30, 5, 7)
+	print("Docs is updating" .. str)
+	
+	-- Move draw head
+	rectfill(8, 30, 142, 106, 0)
+	print("", 10, 21, 7)
+	for i = 1, #log do
+		print(log[i])
+	end
+	rectfill(143, 30, 150, 150, 18)
+end
+
+on_event("log", function(msg)
+	add(log, msg.log)
+	if #log > 7 then deli(log, 1) end
+--	notify(msg.file)
+end)
+:: updateFiles.lua
+--[[pod_format="raw",created="2024-09-14 10:41:06",modified="2024-09-28 21:07:04",revision=357]]
+function check_for_updates()
+	-- Go through each source and check if it needs an update
+	-- If a source needs an update, rm everything, atm we always need a clean slate?
+	-- Then just call an update like in settings.lua
+	
+	sources_fetch()
+	
+	for src = 1, #sources do
+		local addr = sources[src].url .. "manifest.txt"
+		local manifest = fetch(addr)
+		local mTable = line_split(manifest)
+		
+		if mTable[1] + 0 > sources[src].ver then
+			-- Notify pages are avaliable for update
+			notify("There are updates avaliable for your pages!")
+		end
+	end
+	
+	local serverVer = fetch("https://raw.githubusercontent.com/The-Nenjine/pages/main/ver.txt")
+	local localVer = fetch("ver.txt")
+	if localVer and serverVer then
+		if localVer < serverVer then
+			notify("There are updates avaliable for Docs!")
+		end
+	end
+end
+
+function update_pages()
+	-- Show updating window
+	local updating_window = create_process("update.lua", {parent_window = pid()})
+	
+	-- Create the sources pod, with Docs pages as the default url.
+	sources_fetch()
+	
+	fetches = {}
+	
+	-- Go through the sources and create coroutines to fetch their pages
+	for src = 1, #sources do
+		local addr = sources[src].url .. "manifest.txt"
+		manifest = fetch(addr)
+		mTable = line_split(manifest)
+		
+		for page = 2, #mTable do
+			if sub(mTable[page], 1, 2) == "> " then
+				-- Folder
+				mkdir("/appdata/docs/pages/" .. sub(mTable[page], 3))
+				send_message(updating_window, { event = "log", log = mTable[page] })
+			else
+				-- File
+				-- Add a coroutine to fetch this file
+				add(fetches, cocreate(function()
+					local file = fetch(sources[src].url .. mTable[page])
+					store("/appdata/docs/pages/" .. mTable[page], file)
+					send_message(updating_window, { event = "log", log = mTable[page] })
+				end))
+			end
+		end
+		sources[src].ver = mTable[1] + 0
+	end
+	
+	-- Store the updated source versions
+	store("/appdata/docs/sources.pod", sources)
+	
+	-- Start all the coroutines
+	for o = 1, #fetches do
+		coresume(fetches[o])
+	end
+	
+	-- Check for coroutines returning, waiting till they are all done
+	local fetchesRemaining = #fetches
+	while #fetches > 1 do
+		for o = #fetches, 1, -1 do
+			local status = costatus(fetches[o])
+			if status == "dead" then
+				-- Dead, skip for now
+--				fetchesRemaining -= 1
+				deli(fetches, o)
+			end
+			if status == "suspended" then
+				-- Suspended, coroutine not finished, try again
+				coresume(fetches[o])
+			end
+		end
+	end
+	
+	kill_process(updating_window)
+end
+
+function line_split(str)
+	lines = {}
+	for s in str:gmatch("[^\r\n]+") do
+	    table.insert(lines, s)
+	end
+	return lines
+end
+
+function kill_process(process)
+	send_message(2, {event="kill_process", proc_id=process})
+end
+
+function sources_fetch()
+	if fstat("/appdata/docs/sources.pod") == nil then
+		sources = { { url = "https://raw.githubusercontent.com/The-Nenjine/pages/main/", ver = -1 } }
+		store("/appdata/docs/sources.pod", sources)
+	else
+		sources = fetch("/appdata/docs/sources.pod")
+	end
+end
+:: .info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTA4LTI0IDEyOjU0OjE1IixpY29uPXVzZXJkYXRhKCJ1
+OCIsMTYsMTYsIjAwMDAwMTAxMGQwZDBkMGQwZDBkMGQwZDBkMGQwZDAwMDAwMTBkMDEwZDBkMGQw
+ZDBkMGQwZDBkMGQwZDBkMDAwMDAxMGQwMTBkMGQwZDBkMGQwZDBkMGQwZDBkMGQwMDAwMDEwZDAx
+MGQwZDA2MGQwZDBkMGQwZDBkMGQwZDAwMDAwMTBkMDEwZDBkMDYwZDA2MDYwZDA2MDYwZDBkMDAw
+MDAxMGQwMTBkMDYwNjBkMDYwNjBkMDYwZDBkMGQwMDAwMDEwZDAxMGQwNjA2MGQwNjA2MGQwNjA2
+MGQwZDAwMDAwMTBkMDEwZDBkMGQwZDBkMGQwZDBkMGQwZDBkMDAwMDAxMGQwMTBkMDYwNjA2MDYw
+NjA2MDYwNjBkMGQwMDAwMDEwZDAxMGQwZDBkMGQwZDBkMGQwZDBkMGQwZDAwMDAwMTBkMDEwZDBk
+MGQwZDBkMGQwZDBkMGQwZDBkMDAwMDAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMDAwMDEw
+NzA3MDcwNzA3MDcwNzA3MGQwZDA3MDcwMTAwMDAwMTA3MDcwNzA3MDcwNzA3MDcwZDBkMDcwNzAx
+MDAwMDAxMDcwNzA3MDcwNzA3MDcwNzA3MGQwNzA3MDEwMDAwMDAwMTAxMDEwMTAxMDEwMTAxMDEw
+MTAxMDEwMTAwIiksYXV0aG9yPSJIZXNzZXJ5Iixtb2RpZmllZD0iMjAyNC0xMi0xMSAwNTo1Mjo1
+MyIsbm90ZXM9IkEgZG9jdW1lbnRhdGlvbiBjb21wYW5pb25cbmZvciBQaWNvdHJvbi4iLHJ1bnRp
+bWU9MTIsdGl0bGU9IkRvY3MiLHZlcnNpb249IlYxLjMiLHdvcmtzcGFjZXM9e3tsb2NhdGlvbj0i
+bWFpbi5sdWEjMSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iR1VJL2d1aUZ1bmMubHVh
+IzE0Iix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJHVUkvc2lkZWJhci5sdWEjMTYwIix3
+b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJHVUkvZ3VpLmx1YSM2OSIsd29ya3NwYWNlX2lu
+ZGV4PTF9fV1d
+:: [eoc]
