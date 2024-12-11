@@ -4,7 +4,7 @@ version 2
 :: gfx/
 :: gfx/0.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIwOjM2OjE0Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMCAwNjo0MzozNyIscmV2aXNpb249MjM3XV1sejQAKAIAAOEzAADxEHtbMF09e2JtcD1weHUA
+Mi0xMSAwNDoyMjo0NyIscmV2aXNpb249MjQwXV1sejQAKAIAAOEzAADxEHtbMF09e2JtcD1weHUA
 QyAICAQgBwYwRwYAFwYQFwYFAIIHBjAHBmcGZwkA4yxmbGFncz0wLHBhbl94CADKeT0wLHpvb209
 N30sTgBARwYQB0UAEgAGAFVHBhBHIBEAPycGZ1AAHUAARwYAigAkIBcFABFQCAAQZ1wAHwBNABxB
 NwYgB_oABKMABlYAAhAAABwAPzcGIFcAHwFaAFBQJwYwJzQBL1Bn6QAfAnEBRVAHBlBPAD8HBlAu
@@ -17,28 +17,28 @@ fwIPOgQvDoABTyAnBhBUACMCBQMTZwIAAVAAD7sCIQyOAEQwJwYgCQcPUAAmA7YCIwBXigEBwQIP
 ---------------------_pQbT04fX0=
 :: gfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIxOjIwOjUyIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMCAwNjo0Mzo1MiJdXQ==
+Mi0xMSAwNDoyMjo0NyJdXQ==
 :: map/
 :: map/0.map
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIwOjM2OjE0Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMCAwNjo0MzozNyIscmV2aXNpb249MjI0XV1sejQAZwAAAFYQAADwCHt7Ym1wPXVzZXJkYXRh
+Mi0xMSAwNDoyMjo0NyIscmV2aXNpb249MjI3XV1sejQAZwAAAFYQAADwCHt7Ym1wPXVzZXJkYXRh
 KCJpMTYiLDMyAwAvIjABAP--------------------vxCCIpLGhpZGRlbj1mYWxzZSxwYW5feD0w
 CADCeT0wLHRpbGVfaD04CQDAdz04LHpvb209MX19
 :: map/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIxOjIwOjUyIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMCAwNjo0Mzo1MiJdXQ==
+Mi0xMSAwNDoyMjo0NyJdXQ==
 :: sfx/
 :: sfx/0.sfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIwOjM2OjE0Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMCAwNjo0MzozNyIscmV2aXNpb249MjI0XV1sejQAoAAAAAsKAAD-MHB4dQADKAAABAAED0AQ
+Mi0xMSAwNDoyMjo0NyIscmV2aXNpb249MjI2XV1sejQAoAAAAAsKAAD-MHB4dQADKAAABAAED0AQ
 Ag4AAaABIAKgDgAPEAAN8MoBAgNADw_QBAUGB0AMkAgJCgtADJAPDA8NDw4MQAzw-wEA6-8nqgEQ
 Bg8gEAEgASAB8AACEAIOEAEgDyEgATAPQPDDDygP--DGD-gKD-8PgA-3Dw0B8AkBEAYOMAD-----
 -70f-wEArM-ID0AADxBA--_w8P8BAP-qUP----8p
 :: sfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIxOjIwOjUyIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMCAwNjo0Mzo1MiJdXQ==
+Mi0xMSAwNDoyMjo0NyJdXQ==
 :: main.lua
---[[pod_format="raw",created="2024-12-09 20:36:14",modified="2024-12-10 06:43:37",revision=321]]
+--[[pod_format="raw",created="2024-12-09 20:36:14",modified="2024-12-11 04:22:47",revision=325]]
 function _init()
     active_frame = 0
     tick_counter = 0
@@ -72,7 +72,7 @@ function _draw()
     cls(theme"desktop0")
     
     pal(7, theme"desktop1")
-    pal(6, theme"desktop2")
+    pal(6, theme"desktop_shadow")
     
     -- Iterate over rows and columns to fill the screen
     for row = 0, rows - 1 do
@@ -120,8 +120,8 @@ function _update()
 end
 :: .info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTA5IDIwOjQwOjMwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMCAwNjo0Mzo1MiIscnVudGltZT0xMix3b3Jrc3BhY2VzPXt7bG9jYXRpb249Im1haW4ubHVh
-IzI1Iix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJnZngvMC5nZngiLHdvcmtzcGFjZV9p
+Mi0xMSAwNDoyMjo0NyIscnVudGltZT0xMix3b3Jrc3BhY2VzPXt7bG9jYXRpb249Im1haW4ubHVh
+IzM0Iix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJnZngvMC5nZngiLHdvcmtzcGFjZV9p
 bmRleD0yfSx7bG9jYXRpb249Im1hcC8wLm1hcCIsd29ya3NwYWNlX2luZGV4PTN9LHtsb2NhdGlv
 bj0ic2Z4LzAuc2Z4Iix3b3Jrc3BhY2VfaW5kZXg9NH19XV0=
 :: [eoc]
