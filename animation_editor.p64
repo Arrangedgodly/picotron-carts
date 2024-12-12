@@ -1,0 +1,167 @@
+picotron cartridge // www.picotron.net
+version 2
+
+:: afx/
+:: afx/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTEyIDA2OjU4OjM5Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwODowNDozOSJdXQ==
+:: gfx/
+:: gfx/0.gfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwODowNDozOSIscmV2aXNpb249NDQzXV1sejQAYgIAAM4yAADzIXtbMF09e2JtcD1weHUA
+QyAQEATwVgcQB8AX0BfABxAH8FYsZmxhZ3M9MCxwYW5feAgAy3k9MCx6b29tPTh9LD4A-xkDBtAW
+0AYQJpBWkBYQBqAGIAYwRkBmAAZgFkAWYAZAFsAWwBbQBvAmWAAd8AYXJwAXYIdQRyAXUBcwJ7AX
+0DfgB8AIAH8nwCfgB-AVUAAd-woWXxaALrAe0A7gXqBOgC6QPrBu0D6gTuAuSwAf-yMUNbAFQCVg
+FQA1AAWAFTAFcBUwFXAFAAUQFXAVADWABSAVgBUQZUAVEBUwBWBVwAXwF2IAHfEXBS8VoC7ADjBO
+UA4gLgAeUC4wHlAeEC4QHkAuMA4AHkAOAA4wDgAGALAQTgAuMA4QPgAuUBwAvw5gLiAucF6QLvAI
+dQAe8A9vD3Ae0B4QPoAOAB4QHnAOAA4gHoAuAC5QfgAOME5tAOAwDhAOIA4QHjAeAA4gDpkAAAYA
+b3B_kF7wFG8AGfIOICAE8CQPEvAOHvANLvANDhAO0F5wDhAO8AQOUB4HAPAQDjAO8AKOIB7wAC4g
+XhAO4C4gLjA_0B4gLjBOwC4ATpAAcJAuAC4ADlDxAPAATiAOMD4gPqAOMA4gTgBeCACQEC4AbgAO
+sA4grABATiAesBwA-yZeIB7ADjA_EC4wDtBOAA4APjAu8AFOMD4ADvACDgC_8AIOMD4AHvAFTjBe
+8AMOoB7wDw7wk0kBHR-wMQALHzkxAB0fNDEA----------------------------------------
+----------------------8vUG09NH19
+:: gfx/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwODowNDozOSJdXQ==
+:: map/
+:: map/0.map
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwODowNDozOSIscmV2aXNpb249NDE3XV1sejQAaAAAAFgQAADwCHt7Ym1wPXVzZXJkYXRh
+KCJpMTYiLDMyAwAvIjABAP--------------------vxCCIpLGhpZGRlbj1mYWxzZSxwYW5feD0w
+CADSeT0wLHRpbGVfaD0xNgoAEHcKAIB6b29tPTF9fQ==
+:: map/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwODowNDozOSJdXQ==
+:: sfx/
+:: sfx/0.sfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwODowNDozOSIscmV2aXNpb249NDEyXV1sejQAoAAAAAsKAAD-MHB4dQADKAAABAAED0AQ
+Ag4AAaABIAKgDgAPEAAN8MoBAgNADw_QBAUGB0AMkAgJCgtADJAPDA8NDw4MQAzw-wEA6-8nqgEQ
+Bg8gEAEgASAB8AACEAIOEAEgDyEgATAPQPDDDygP--DGD-gKD-8PgA-3Dw0B8AkBEAYOMAD-----
+-70f-wEArM-ID0AADxBA--_w8P8BAP-qUP----8p
+:: sfx/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwODowNDozOSJdXQ==
+:: vgfx/
+:: vgfx/0.vgfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU3OjMwIixtb2RpZmllZD0iMjAyNC0x
+Mi0xMSAyMTowMzoyMCIscmV2aXNpb249MzBdXWx6NACOAAAA0QAAALB7e3tjb2xfYT0xLAgA8Cti
+PTE2LGZpbGw9NDM2OTAsbmFtZT0iIixvdXRsaW5lPS0xLHBvaW50cz17ezQwLC00MH0sey0xMCwx
+CQDzDjAsNDB9fSxzaG93PXRydWUsdHlwZT0iZWFyIn0saAATOGgAEjJnAE8zNzc0ZwALFS1oAD8x
+MyxmAApQciJ9fX0=
+:: vgfx/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU3OjMwIixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwODowNDozOSJdXQ==
+:: gui.lua
+--[[pod_format="raw",created="2024-12-11 21:26:33",modified="2024-12-12 08:04:39",revision=459]]
+gui = create_gui()
+
+local colors = {
+	menu_background = theme"icon0",
+	button_unselect = theme"icon1",
+	button_select = theme"icon0",
+	button_text = theme"icon2",
+	container_bg = 5,
+}
+	
+local menuBar = gui:attach{
+	x=400,
+	y=0,
+	width = 80,
+	height = 270,
+	draw = function(self)
+		fillBG(self,colors.menu_background)
+	end
+}
+
+text_bar = menuBar:attach_text_editor{
+	x = 5,
+	y = 2,
+	width = 70,
+	height = 15
+}
+
+function fillBG(self, col)
+	rectfill(0,0,self.width,self.height,col)
+end
+
+local loadBtn = menuBar:attach{
+	x=0,
+	y=text_bar.height + 4,
+	width=80,
+	height=15,
+	clicked = false,
+	draw = function(self)
+		fillBG(self, self.clicked and colors.button_select or colors.button_unselect)
+		print("Load", 32, 5, colors.button_text)
+	end,
+	click = function(self) self.clicked = true end,
+	release = function(self) self.clicked = false end
+}
+
+local saveBtn = menuBar:attach{
+	x = 0,
+	y = loadBtn.y + loadBtn.height,
+	width = menuBar.width,
+	height = 15,
+	clicked = false,
+	draw = function(self)
+		fillBG(self, self.clicked and colors.button_select or colors.button_unselect)
+		print("Save", 32, 5, colors.button_text)
+	end,
+	click = function(self) self.clicked = true end,
+	release = function(self) self.clicked = false end
+}	
+:: main.lua
+--[[pod_format="raw",created="2024-12-11 20:55:39",modified="2024-12-12 08:04:39",revision=537]]
+include "gui.lua"
+
+function _init()
+  get_display()
+  window({
+    width = 480,
+    height = 270,
+    title = "temp.afx",
+    has_frame = false,
+    show_toolbar = true,
+    tabbed = true,
+    icon = userdata("[gfx]08086660666066606660666066600600060066666606666666666666666666666606[/gfx]"),
+    x = 0,
+    y = 0
+  })
+  
+  mkdir("/ram/cart/afx")
+  
+end
+
+function _update()
+	gui:update_all()
+	if btnp(6) or key("escape") then
+		stop()
+	end
+end
+
+function _draw()
+	cls(theme"window_frame")
+	gui:draw_all()
+  
+end
+:: .info.pod
+b64$LS1bW3BvZCxpY29uPXVzZXJkYXRhKCJ1OCIsMTYsMTYsIjAwMDAwMDAwMDAwMDBkMGQwZDBk
+MGQwZDBkMDAwMDAwMDAwZDBkMGQwZDBkMGQwNzA3MDcwNzA3MGQwMDAwMDAwMDBkMDcwNzA3MGQw
+ZDA3MDEwMTAxMDcwZDAwMDAwMDAwMGQwNzAxMDcwZDBkMDcwMTAxMDEwNzBkMDAwMDAwMDAwZDA3
+MDcwNzBkMGQwNzA3MDcwNzA3MGQwMDAwMDAwZDBkMGQwNzBkMGQwZDBkMGQwNzBkMGQwZDBkMGQw
+ZDBkMDcwNzA3MDcwNzA3MDcwNzA3MDcwNzBkMGQwNzBkMGQwNzA3MDcwNzA3MDcwNzA3MDcwNzA3
+MGQwNzA2MGQwZDA3MDcwNzAxMDEwMTA3MDEwMTAxMDcwNzA2MDYwZDBkMDcwNzA3MDEwNzAxMDcw
+MTA3MDcwNzA3MDYwNjBkMGQwNzA3MDcwMTAxMDEwNzAxMDEwNzA3MDcwNjA2MGQwZDA3MDcwNzAx
+MDcwMTA3MDEwNzA3MDcwNzA2MDYwZDBkMGQwNzA3MDEwNzAxMDcwMTAxMDEwNzA3MDYwNjBkMDAw
+ZDBkMDcwNzA3MDcwNzA3MDcwNzA3MGQwNzA2MGQwMDAwMGQwZDA3MDcwNzA3MDcwNzA3MDcwZDBk
+MDcwZDAwMDAwMDBkMGQwZDBkMGQwZDBkMGQwZDBkMGQwZDBkIiksY3JlYXRlZD0iMjAyNC0xMi0x
+MSAyMDo1NjoyMyIsbW9kaWZpZWQ9IjIwMjQtMTItMTIgMDg6MDQ6MzkiLG5vdGVzPSJBIHRvb2wg
+Zm9yIGNvbnZlcnRpbmcgZ2Z4XG5maWxlcyBpbnRvIGFmeCBhbmltYXRpb25zIixydW50aW1lPTEy
+LGF1dGhvcj0iQXJyYW5nZWQgR29kbHkiLHRpdGxlPSJBbmltYXRpb24gRWRpdG9yIix2ZXJzaW9u
+PSIwLjEiLHdvcmtzcGFjZXM9e3tsb2NhdGlvbj0ibWFpbi5sdWEjMjkiLHdvcmtzcGFjZV9pbmRl
+eD0xfSx7bG9jYXRpb249Imd1aS5sdWEjMyIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0i
+Z2Z4LzAuZ2Z4Iix3b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJtYXAvMC5tYXAiLHdvcmtz
+cGFjZV9pbmRleD0zfSx7bG9jYXRpb249InNmeC8wLnNmeCIsd29ya3NwYWNlX2luZGV4PTR9fV1d
+:: [eoc]

@@ -1,0 +1,1134 @@
+picotron cartridge // www.picotron.net
+version 2
+
+:: gfx/
+:: gfx/0.gfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTAzLTE1IDEzOjU4OjM2Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwNzoyMzo1MSIscmV2aXNpb249MjI4NV1dbHo0AJQAAAAiMQAA8xR7WzBdPXtibXA9cHh1
+AEMgEBAE8PAsZmxhZ3M9MCxwYW5feAgAy3k9MCx6b29tPTh9LDEA-w8B1iC2QJZgdoBWoDbAFtAW
+wDagVoB2YJZAtiDW8AFOAB0f8DEA------------------------------------------------
+----------------plBtPTh9fQ==
+:: gfx/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTAzLTE1IDEzOjU4OjM2Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwNzoyMzo1OSIsc3RvcmVkPSIyMDI0LTAzLTE1IDEzOjU4OjM2Il1d
+:: map/
+:: map/0.map
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTAzLTE1IDEzOjU4OjM2Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwNzoyMzo1MSIscmV2aXNpb249MjI4Ml1dbHo0AGgAAABYEAAA8Ah7e2JtcD11c2VyZGF0
+YSgiaTE2IiwzMgMALyIwAQD--------------------78QgiKSxoaWRkZW49ZmFsc2UscGFuX3g9
+MAgA0nk9MCx0aWxlX2g9MTYKABB3CgCAem9vbT0xfX0=
+:: map/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTAzLTE1IDEzOjU4OjM2Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwNzoyMzo1OSIsc3RvcmVkPSIyMDI0LTAzLTE1IDEzOjU4OjM2Il1d
+:: sfx/
+:: sfx/0.sfx
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTAzLTE1IDEzOjU4OjM2Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwNzoyMzo1MSIscmV2aXNpb249MjI4M11dbHo0ABEBAABSCAAA8CdweHUAAygAAAQABA9A
+EAIOAAGgASACoA4ADxAADfDKAQIDBAUGBwAP-5AICQoLDwwPDQ8ODw8QAPAADQ8RDxIPEw8UDxUP
+Fg8XEwDxAQ8YDxkPGg8bDxwPHQ8eDx8UAPEAIA8hDyIPIw8kDyUPJg8nFADxACgPKQ8qDysPLA8t
+Dy4PLxQA8QAwDzEPMg8zDzQPNQ82DzcUAP8FOA85DzoPOw88Dz0PPg8-AA--8P8BAOv-J1oBEAYP
+IBABIAEgAfAAAhACDBABIA8hIAEwD0Dwww8oD--wxg-4Cg--D4AP9w8NAfAJARAGDDAA-zkf-wEA
+3L-4D0AADUD--7DwcAoA--9kH-8BAP_ZUP----8g
+:: sfx/.info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTAzLTE1IDEzOjU4OjM2Iixtb2RpZmllZD0iMjAyNC0x
+Mi0xMiAwNzoyMzo1OSIsc3RvcmVkPSIyMDI0LTAzLTE1IDEzOjU4OjM2Il1d
+:: default_settings.lua
+--[[pod_format="raw",created="2024-08-21 13:51:41",modified="2024-12-12 07:23:51",revision=346]]
+default_settings = {
+	-- copy selected to clipboard
+	clipboard = false,
+	-- execute lua files as programs
+	execute_lua = false,
+	-- execute p64 files as programs
+	execute_p64 = true,
+	-- show files in output
+	show_files = true,
+	-- show folders in output
+	show_folders = true,
+	-- show index of files/lines
+	show_index = false,
+	-- show copy index instead of path
+	copy_index = false,
+	-- apply ignore rules
+	ignore = true,
+	-- follow location files
+	follow_loc = true,
+}
+
+default_ignore_list = {}
+
+default_settings_file = "/appdata/fuzzy_finder/settings.pod"
+default_ignore_file = "/appdata/fuzzy_finder/ignore.txt"
+
+:: fzy.lua
+--[[pod_format="raw",created="2024-08-20 15:46:01",modified="2024-12-12 07:23:51",revision=2366]]
+-- https://github.com/swarn/fzy-lua/blob/main/src/fzy_lua.lua
+-- MIT License
+-- The lua implementation of the fzy string matching algorithm
+
+include("mergesort.lua")
+
+local SCORE_GAP_LEADING = -0.005
+local SCORE_GAP_TRAILING = -0.005
+local SCORE_GAP_INNER = -0.01
+local SCORE_MATCH_CONSECUTIVE = 1.0
+local SCORE_MATCH_SLASH = 0.9
+local SCORE_MATCH_WORD = 0.8
+local SCORE_MATCH_CAPITAL = 0.7
+local SCORE_MATCH_DOT = 0.6
+local SCORE_MAX = math.huge
+local SCORE_MIN = -math.huge
+local MATCH_MAX_LENGTH = 1024
+
+fzy = {}
+
+-- Check if `needle` is a subsequence of the `haystack`.
+--
+-- Usually called before `score` or `positions`.
+--
+-- Args:
+--   needle (string)
+--   haystack (string)
+--   case_sensitive (bool, optional): defaults to false
+--
+-- Returns:
+--   bool
+function fzy.has_match(needle, haystack, case_sensitive)
+  if not case_sensitive then
+    needle = string.lower(needle)
+    haystack = string.lower(haystack)
+  end
+
+  local j = 1
+  for i = 1, string.len(needle) do
+    j = string.find(haystack, needle:sub(i, i), j, true)
+    if not j then
+      return false
+    else
+      j = j + 1
+    end
+  end
+
+  return true
+end
+
+local function is_lower(c)
+  return c:match("%l")
+end
+
+local function is_upper(c)
+  return c:match("%u")
+end
+
+local function precompute_bonus(haystack)
+  local match_bonus = {}
+
+  local last_char = "/"
+  for i = 1, string.len(haystack) do
+    local this_char = haystack:sub(i, i)
+    if last_char == "/" or last_char == "\\" then
+      match_bonus[i] = SCORE_MATCH_SLASH
+    elseif last_char == "-" or last_char == "_" or last_char == " " then
+      match_bonus[i] = SCORE_MATCH_WORD
+    elseif last_char == "." then
+      match_bonus[i] = SCORE_MATCH_DOT
+    elseif is_lower(last_char) and is_upper(this_char) then
+      match_bonus[i] = SCORE_MATCH_CAPITAL
+    else
+      match_bonus[i] = 0
+    end
+
+    last_char = this_char
+  end
+
+  return match_bonus
+end
+
+local function compute(needle, haystack, D, M, case_sensitive)
+  -- Note that the match bonuses must be computed before the arguments are
+  -- converted to lowercase, since there are bonuses for camelCase.
+  local match_bonus = precompute_bonus(haystack)
+  local n = string.len(needle)
+  local m = string.len(haystack)
+
+  if not case_sensitive then
+    needle = string.lower(needle)
+    haystack = string.lower(haystack)
+  end
+
+  -- Because lua only grants access to chars through substring extraction,
+  -- get all the characters from the haystack once now, to reuse below.
+  local haystack_chars = {}
+  for i = 1, m do
+    haystack_chars[i] = haystack:sub(i, i)
+  end
+
+  for i = 1, n do
+    D[i] = {}
+    M[i] = {}
+
+    local prev_score = SCORE_MIN
+    local gap_score = i == n and SCORE_GAP_TRAILING or SCORE_GAP_INNER
+    local needle_char = needle:sub(i, i)
+
+    for j = 1, m do
+      if needle_char == haystack_chars[j] then
+        local score = SCORE_MIN
+        if i == 1 then
+          score = ((j - 1) * SCORE_GAP_LEADING) + match_bonus[j]
+        elseif j > 1 then
+          local a = M[i - 1][j - 1] + match_bonus[j]
+          local b = D[i - 1][j - 1] + SCORE_MATCH_CONSECUTIVE
+          score = math.max(a, b)
+        end
+        D[i][j] = score
+        prev_score = math.max(score, prev_score + gap_score)
+        M[i][j] = prev_score
+      else
+        D[i][j] = SCORE_MIN
+        prev_score = prev_score + gap_score
+        M[i][j] = prev_score
+      end
+    end
+  end
+end
+
+-- Compute a matching score.
+--
+-- Args:
+--   needle (string): must be a subequence of `haystack`, or the result is
+--     undefined.
+--   haystack (string)
+--   case_sensitive (bool, optional): defaults to false
+--
+-- Returns:
+--   number: higher scores indicate better matches. See also `get_score_min`
+--     and `get_score_max`.
+function fzy.score(needle, haystack, case_sensitive)
+  local n = string.len(needle)
+  local m = string.len(haystack)
+
+  if n == 0 or m == 0 or m > MATCH_MAX_LENGTH or n > m then
+    return SCORE_MIN
+  elseif n == m then
+    return SCORE_MAX
+  else
+    local D = {}
+    local M = {}
+    compute(needle, haystack, D, M, case_sensitive)
+    return M[n][m]
+  end
+end
+
+-- Compute the locations where fzy matches a string.
+--
+-- Determine where each character of the `needle` is matched to the `haystack`
+-- in the optimal match.
+--
+-- Args:
+--   needle (string): must be a subequence of `haystack`, or the result is
+--     undefined.
+--   haystack (string)
+--   case_sensitive (bool, optional): defaults to false
+--
+-- Returns:
+--   {int,...}: indices, where `indices[n]` is the location of the `n`th
+--     character of `needle` in `haystack`.
+--   number: the same matching score returned by `score`
+function fzy.positions(needle, haystack, case_sensitive)
+  local n = string.len(needle)
+  local m = string.len(haystack)
+
+  if n == 0 or m == 0 or m > MATCH_MAX_LENGTH or n > m then
+    return {}, SCORE_MIN
+  elseif n == m then
+    local consecutive = {}
+    for i = 1, n do
+      consecutive[i] = i
+    end
+    return consecutive, SCORE_MAX
+  end
+
+  local D = {}
+  local M = {}
+  compute(needle, haystack, D, M, case_sensitive)
+
+  local positions = {}
+  local match_required = false
+  local j = m
+  for i = n, 1, -1 do
+    while j >= 1 do
+      if D[i][j] ~= SCORE_MIN and (match_required or D[i][j] == M[i][j]) then
+        match_required = (i ~= 1) and (j ~= 1) and (
+        M[i][j] == D[i - 1][j - 1] + SCORE_MATCH_CONSECUTIVE)
+        positions[i] = j
+        j = j - 1
+        break
+      else
+        j = j - 1
+      end
+    end
+  end
+
+  return positions, M[n][m]
+end
+
+-- Apply `has_match` and `positions` to an array of haystacks.
+--
+-- Args:
+--   needle (string)
+--   haystack ({string, ...})
+--   case_sensitive (bool, optional): defaults to false
+--
+-- Returns:
+--   {{idx, positions, score}, ...}: an array with one entry per matching line
+--     in `haystacks`, each entry giving the index of the line in `haystacks`
+--     as well as the equivalent to the return value of `positions` for that
+--     line.
+function fzy.filter(needle, haystacks, case_sensitive)
+  local result = {}
+  
+  local count = 0
+
+  for i, line in ipairs(haystacks) do
+    if fzy.has_match(needle, line, case_sensitive) then
+      local p, s = fzy.positions(needle, line, case_sensitive)
+      table.insert(result, {i, p, s})
+    end
+    
+    count += 1
+    
+    if count == 100 then
+      count = 0
+      
+	   sort(result, function(a, b) return a[3] > b[3] end)
+      yield(result)
+    end
+  end
+
+  sort(result, function(a, b) return a[3] > b[3] end)
+  yield(result)
+  --return result
+end
+
+-- The lowest value returned by `score`.
+--
+-- In two special cases:
+--  - an empty `needle`, or
+--  - a `needle` or `haystack` larger than than `get_max_length`,
+-- the `score` function will return this exact value, which can be used as a
+-- sentinel. This is the lowest possible score.
+function fzy.get_score_min()
+  return SCORE_MIN
+end
+
+-- The score returned for exact matches. This is the highest possible score.
+function fzy.get_score_max()
+  return SCORE_MAX
+end
+
+-- The maximum size for which `fzy` will evaluate scores.
+function fzy.get_max_length()
+  return MATCH_MAX_LENGTH
+end
+
+-- The minimum score returned for normal matches.
+--
+-- For matches that don't return `get_score_min`, their score will be greater
+-- than than this value.
+function fzy.get_score_floor()
+  return MATCH_MAX_LENGTH * SCORE_GAP_INNER
+end
+
+-- The maximum score for non-exact matches.
+--
+-- For matches that don't return `get_score_max`, their score will be less than
+-- this value.
+function fzy.get_score_ceiling()
+  return MATCH_MAX_LENGTH * SCORE_MATCH_CONSECUTIVE
+end
+
+-- The name of the currently-running implmenetation, "lua" or "native".
+function fzy.get_implementation_name()
+  return "lua"
+end
+:: label.png
+b64$iVBORw0KGgoAAAANSUhEUgAAAeAAAAEOCAYAAABRmsRnAAA9gUlEQVR4Ae2dLZDjPLOFNamA
+wBcaGi40DBxoaBi4MHBgYGBgYODAwEDBgQMNFxoaLgwYcO98u_1td1qyZMt-cZ8ql3xk-bbkfujL
+-Xf5pUQikUgkEg2qlYRAJBKJRKLhteYqT8cb2-hwzCRiIpFI9ESCfA-5nXqXvlz-tsxo0781s44f
+Dd9fvdZ9OGZV2RrATROIRCKR6PngC__n422QfE-B2WU_2tcE5b7kC18jgLmNwOAikUgkEol4yNM6
+G5BZAOMBoLPAVyQSiUQ_MGojG7CmKm7NLvFgAQwDwgBzDIhIJBKJhoEPhQ1X5wvxttzxmvf4Omrs
+jACGTXCBFYlEIpFobLWBfB3AH6MCmgXw4Zh135hIJBKJJi3I9afjTR2OWQ1q4NtAcEx_uK7bCtom
+MAfa78v9d-kl11AkEolEomG1khCIRCKRSDS81vH_Q6IgclaZ3qv3SG-EP7kXiUT9aQU-3FxL_i6_
+X4_TssSlnY-0pga7qXs5N-Hi_-GruW_gTO8PyUJ8-54CWUq-ci7-GHf_UkopZZhyVfvrZioMBUgW
+4vv3kpjblRh2ENc5eHoPpJx_Obc7NrQf_3xeot316xkgLBpXkJwpXMQ-p6dJTSQS_WsFP9QzlThp
+4G-i_-NcQpa4uPlIbx7gNnXP-XtyruLF_-nVM26QJgecPMT360GQpKVsLsv0Ptt-jrsPUkoppVu5
+eiDXEwqSBE544vvzpkQtpbkE0fjNyXP3QMpplXO-Y337oc-jJdpdv5YAYdF4AsgArPFlF-_cniY5
+kUj0qBX8MEsp6bv4-r3Ewd9TmM3Nm-498eLF--OrpW24TO_1ZCF_GI8TNU7SUvIl1Vz-Oe4_SCml
+lH-KFfu3P7lwsoDkgBOg_P48l6ClNJdUNI5z8vReSDl_Ofc71bfvO-4v0e76tUQIi6YhDBqAtfjn
+9zTpiURL1Ap_iKWXJiiI79fjRCxxcfOR3jzAbG7e9g_KF099kp-ZZ_77W8kB--E4GeBkIX4YT4Es
+pb18ln9QSimbyvR0UT-iXfXc0rfqoRCeW7mq-RWiBygALKbok-ys0tOldTm1-VAwS8mXGGYQxzl7
+XIfvhZTjlGPcAZyX4AH-I95VbU8-ood8PeR6Q8f7Jdpdv6YIwSQ-e7XPk7dn4b9XjG6ft1Z9s202
+6ZgBlClsxD_-pwlQtIA8lrbLRZk_zzr3v6j39y988adQpqeLN1gAKH2sB5IDhcPYHgB82F29YnW6
+7moAnsp_OI8TtMgs7q7O3U-xPooP77sCWB-2s93-iktyY-o28FVKqdvnTSX5uZf14ToK5rE9hurp
+umt85-Y1pf2Y9gcXVkq_NN3XOXt46P8n5fOVXTXXfa_C7H5BAjjgBDimxzrsrrWS1s9hP5x-hh9t
+rERG4zdHj_vovZCy-7LvMw6Rk8f0XeL7Eu2uX1MCXJKf1e3z1qpvts1Unrw9M--ZWB12V3W67irY
+nq67Crq4HnS67mYdK4ANwBr-BOKf34dO4KIJ5LG0XS7K9HnWOX8FF3wqZajkPOR66dqH9iAKWVqP
+68Zcb6j9zm3dY-lIb2owm7uXe-BcPlTOn6NfyYF082V6ryWHoT0H38PuWnlaz8VqzPW39Tgxw7uU
+5vIZkzg8_LuU8yxD5fy5laug5FuoKBSG9EopdbruvB6sodfbx-4lgdlLnORo3J7B4zp8T6Tsrwx5
+hl01tTvpE8eXaHf9mhLMkvysbp_3Vn2zbaby5M1rLpFItCz55AjRQDk-bXcmmT7P_jzXSilVpveK
+ymV6H7X8n44fSh1f-XZy-FCwF5d5kvysfsQ7uf0i0eIIXE-atdwjfnDfVXPe-4t6f-_CDwCoMX2S
+n9Ut-fdz_CjTZ6UP_8b50tNF4CsSLVi-iqvKk7fR8534P-k4RM6f4-5XQGJaTkGHX6U6-ColWyxM
+1_Kj9ow9r88ahlyvqLtM_U9Kv5KLqavPkzeV6XOrRx-23vMN7W1xe4l216_p-RRJfla39M2rT6bP
+Kk-c_iT5Wf2Id_y3X8XV2M-URxQehLv4dZbzjrV2kf1fpv-ur_LqnC9Eor60UkqpMr3XKrGH9yHL
+PHn7H1B9Hn3Ye81jg6zpEY0LZfp_LT5qj62OG8d1Xtqf1nHtTH1NbUXh4Yv-XQxjKlv_Ey__T-_i
+3t_-wER6U-v4rD49XYxAtf2oAuHhYbuLX6s67h33MdU19bXNa5vbNr6pjo4t6hfANq8P_1qfpeQ-
+8dPxq0hvKuNSPrt_xDvjIxpOu-jVCVTX4uMBqlxd6HldBOug44umo0hvqscnD0rpzgvKjqV7XLf2
+HeAZg4H1q7ha4SyajjjIcnW7_PUBhENIYDuefsS72r-M-buR3qgyvT-khqUAobig_5mR4IT08P7E
+Zbz-k1-oHTKVoJVSqnYJXT3UzbW0-bimRzSeAKIUpFCH67m6XfzaCogwhg3g3Npw3RjwF9X-ZU6Q
+CyK9qWDM5Yc2_XHqvgZfUWfhePqcx4t6f-8CA5fw2X16ughQFyaAYBsIi55Pv4qr0oe9U954xnx4
+z1K5BIEV7z_8z2MNlZHe1Br5_nuWKpWRFU3UZ6eL3JaFScAr4gR5zMeHyJdje1G-d8oVxC-R7vrV
+dcLiMq-klm0pmUUi0dKUJ2-OiZKD8ZzVV84_HW-qcJxPfj0db0opFWTN8f7Du89aKaXK9F67XL5_
+jjr8_k8ykEi0UJ1_-K7gCrnM17fNl1Pwor8cOGYVhEPJ5zxe1Pv7F3yI9KZ2OK7_nqWzCnq2zQTA
+ItHCAawP_055j6rrOEN6W87GQAJAHY5Z9Q2-20BG23Eej9e0HtO8pjpbPR2f6_M7Trz-8D6PFZC4
+a9l44cnh_H53nSPEOCKRaBmi_autn1tpy6GHY1Y9Pu1wSYFNAY3h25SzTf2b6lz3YtpX23F87tA6
+xCUMIdcANY3RFcDb3_--C-rnfz8lO4lETw7fMr0H8WV6N0Jukt6QbnEOteVk13YAsC5q299njSHv
+lE_5ppenjfcJ3ul4ewgMDRK04d59g_nTZ-v7XcArEi1EAE-IZaE8hV7X-NqHbwIXzr04R9vaNY3n
+Ws-xgrKEy_tcnesaQ98r1-N4Ue-vX-jS0Evk4u9Z6hQ8Dra2trSfSzBdxvnU7_rw679GAGMP79vf
+77U_tjraVyQSTUOnH7_VPuw75b0m39e4IbwtZ9sASfO4KZdT_OG2NH9zY-r0NzHBtEZufm4_ro0p
+Lt_K9x-e57ECEnctfWTaQONPc7w9HFIoAUS3v98fgErhCo_tTiQSTV80f4X0AOEQ_TV0acvN8HC5
+F_pN7fA305i0Dzemrb8PZ7h_nOfmcxmr651ah7h0fQkfeBdwu_jzv59q_-vdCaIAaNyWqxOJRNOG
+b5neB-EcjPuAvrP3TKV95l5fmaA-lTvlU67xxQDRuiZvC9TpeHMCLQUuB188lqkdrsN9oM3hmKlM
+-4FlG3GQ5uoA6CKRaJoCOEIuG8pTKPrm2xBe1O_9cj2Pl2h3-YIKXMIloZeG8-csnVWAsm2mDr-_
+c4arDaqmuqZxRSLReDr9_K30Ye_V50L7seYFzS1vT1mbm251Hit6IcDjRi7lM4iD5Od-P6uHelsd
+gFfgKxJNVzR-Dem5nDtkGe8-VLz-UJubrt6n6HHdVMu2d_Al2l2-ul7i4vI6q58u22bq8Os-yT4i
+0UJ1_vFb5cmbKtN7LTGO7UXL0gpfAKVU7UJwnqvb3LREUiQSzUqQxyK9qcFwTA_PT04WP1--Eu2u
+X2V6ry6AawkXBw82F5_eLurw6z-JQCLRQnX68Vvpw37SeWqu_VW8u1-TA-fxXfq2mSukdj-_jC8S
+iZanBCVBrCl5DOG_8_vcPI3ZXEH8Eu2uX4v7_fKzylUkWUgkWiyAS5Unb7NJ1BTUoufQukzvtcMN
+4emFCT0HrmtTqlypn--u_eA65hd1TPatvzfp9FEopZQ6vMaD70spVVu7z1667lskclW_ecxVc-A4
+l-WVX8UP51_i3fWrC8xsJb5EcJGm4NPTRSX3aDQohAQwbXv6KAYHb6g4CYBFwwG4VPrw565NJS-5
+_rmuW-w-v6IHGtLDOzzgQ5ZdE34rSKB_4JvquL6m8Wzz_Or0UTy8nz6K2mOr48YJGauucRGJuojm
+kTl5mnOXXM71DF_i3fVraT9dkp9Vco-_JfRkbwZIwzfcxrfONJfrmmg7CsnDa6xOH4U6vMbVd3jH
+fUx1TX0pHCuP1mRab5v40bFForbKN6XKkzdVpvdaYpyr50Akmr5W_ECVUrUDHsKHHhPem0oMCwoQ
+m475xat9qPFc2gEgD6_xEZYYshSqXJ3THgCWyT4YILn9CnxFIYXhRWE2N2-LceKn61f4IMv0XjvY
+IbwvOF3A6gL9WqJnEjtXD3VsPWnP1ZnmaAIL165p7Cb4UkhzdYfXuILy0IL9CnRFQ8J47t6UY6Wc
+ZrlSSlUHFumNGsuDaF3b0inJe0LsmOwrsHKwsNVxfa3joXpTOxeZIAp1uJ6ro1CGdbisp1q-pV1T
+XNrsWSRyFc0Xz_S5HLu0cupn9BLtrl9L__mS-KySexRkLA7ivmCfsgDGGMIi0dyVb0qVJ2_qTO_1
+xPisnkJANA29qPf3L3w4ZXqvHdbYPvQYZXpX6emichUGwCKRaH5KVKn0YV_DE4XVM3rIgVPO_Uvy
+L9Hu_kUPZoolXCR47_IFwCKRABgDOERemZtf6r6n5Ff0QKbq8aK7lEOp_LwMMofrPKUuVKmLwRMd
+t0af2PQdx7bjD3G_ov5F88KSPJdjp1wm_Vmlp0v1gPfN-1M6g5dod-1a2k_X5GeVq8g50cbbfasE
+3aZfiHloXakLFaXxKPDtGoOh4vgs6xI55gBVqjx5U2V6ryXGJXoKiKnm7B-xrvKnH--yd6bPKk-e
+ZnkP1-QApuKT-Oy8CX3Ye83RNfF_l5B8cSKGd2jDteX64np4x_24vl2EgQzvpS5qbWx1tG-X_Nn2
+6xL7ptj4xJRra1ozPTduLa77FQ0vgBHkhqV6Li5Ty-km_E5p-W38S7S7fkHFVMokP6tb_ub8I2X6
+rPLk7eFCwZjUp6eLypX9EClcbbC1wbipLwcA0xhN43K_DURtda4ApgB12aMtpq7xazpHl3Nx6cuN
+47LPpvlEwyhRpdKHP7E35Yml_jHmTU8Xr5xP878_7GcZ9xX_AFQe0-8Pvp83lemz8wHc0jeV5GcV
+6U3tgbG5sq2_kyaGCyRVl2RK_7rAw9bXRQDIKI2NsMSQpVDl6kxrw2uEfX3HJxRkXOLHrWUoCUzn
+J5oPxP-Lnbb8GboMdY5t5h0z5uupXYQ8eVPZNqtH9-jKR-340eonc032XELlEj7UNUG4bYKmc-iu
+2UUcZLm6KI1VqYtRwOMyj6kNxE0gKcJ5oUzv4g1eKaXK9D44C0LB2MW3BXeock0DPAWvcqVu6Vtz
+pI_vDxBuGr8rADAAm2CLk75P36Z5u4KXgygAF7cx1XHfXAX7sK2Z22_X_Jna07Vwc9BzNJ2vyx0Q
+TUsAG8gP4nnPxa2PnB-yXKfGNJN-iXbXL6iYQpmeLur2eVPZNjNDGMCLAJzps9KHvdM8SX5WuYok
+A7W94H-BCyCeumywFy1TiSqVPvy5E5AbQOLtvo9x-5f3Tfm_QTT3zymuK-wBqDymz5M3lW0zBrh-
+H1zHXAiX_UTdFKXxbOD7nW0FviLjXSY5QXyzx3U4x3YpQ51jiHUMGdOXaHf9mtpPkeRndUvfCIA-
+-pWMMn1WeYL6NIyfq0iyj0i0UCWqVHnypsr0XkuM4v19CIg_5HwP_eT_qWmFA6qUqgV4DP_-g-i8
+qUyf6ys9viIYo4fId74xVHxeOn1vUqkLVepilH3Rtfvspeu__xpriHVMZb1LEuSCSG9qcBHv57vm
+4NA5eWpMs-kVDmSZ3muBHcPnyZvKthmB74dz4F3mm2Mid11fqQsVpbGK0njwdcTbvYq3_1o99UNB
+boh5RfMX5Ic5Je2pehxH3zIUdOdWrvElBDiN7f8-f6pb_uYNYZ-xuyZ7SPA4_dvqTKAwjWeq9wUL
+ABm-l7qox81SR-uGjpVPXL4B7xIHrg2du2ktTfP6rAO3hfG4sduesah74qY5RHw3D3F1zf1d1Seb
+6D2ha_7i11M7uCQ-q9vnTWXb7BHCBmX6bDwQk3cFCE2GNHm61tHEaxqPtrXNS9sBRKE0ARPXc20p
+jF1BSwFCQecaF9MeubiYYoXndY2967xNa6LraAKqaztRWIVMpOJ5mGKYhczNLjAO5SngQ5ZrGqCx
+vT7sVbbNjGDlBMB2nU-l7Q_XAqWrXMdzaRelsSp1YQRv7cewgNelf98A4fY7FqC4edveA4jVmPsR
+oVzg4CF-iG-nubjTnJyrN_d8T6UPexVp_-hT9etIb6qKqZQYrE46ftQ25jp_EwBogsR1OAFzCdUl
+yZrGc2nXBXgcpLk6APpUoOdyRk3QG3J9LmcpEB5XTfnCF9bi3T2OMUAYt6NnYPPceHPwa3oJp_Dz
+5E0l_bkCa5MyfVb6sHcev0vS5RI5l0RpHdfXNh4GeBeAmCCK6wC8XB39xu3BBpsm0LjExRdS3LwY
+ei7na5vTtD5un23GFCgPJ5wQuZIDtviwfkrscfH0fmCw_vqXaHf9murP8T8IOyhP3rzHzVUUZI1c
+0rUBZ3YJ6i94AcRzlcBNVMsBqlR58hYskYpv55euF-X_-oUDgWn-rD49XYIBWCQSzRPA_rBv1Rfy
+CcBEfBi-JAaBf4l21y_oWEqZ5GcBsEgkAG6dRyiQcd0SfXF5ne1d2Nz0aHFb4Q9A5Wf3Y6v4vHT6
+3qRSF6rUxSj7omv32UvXfYc4B9Mahl7b1GL1rIKE6FviJLp0P2f4KqXUPUtrrGhTto3heqkXxyfR
+xdv9ZC8PXV_pCxWl8ejrAA0RuyHOaMp3QNROkd7UgCq_m3_me9HW_4J7Xab32gCuvri8zjbA2fbc
+KdnjhAy_qY7WN41nqvcFAQYyvJe6qF8gSx3tGzpWPnGJt3unONjOxBZn19i77KOpbdN6TWfOxUrU
+ThQeXTyGEeTLpfhnvBdtmNjGr-DFgQ9Nfs7w9QUITZrfiRona9c6GKtpPPhO23Jz0PUBREtdPACV
+whUeW50vaL-X0wQcl7jgOm6-XFuuDYV3U5xtse_6DxN8XcZrukOi9oJE2LXsE_5z8GPodLyp0-EW
+DLpjlCu4RJjKTX7JopAZajyXdgBPF5ACpHE7rs5FJnCFjovL2AAs2jf0ubnGZYx5ReMlXhPgl_KH
+1OGYBRsLsy5E6Rqz9RwCPRZoacLHdTipwjtuz9XZ5rAlaa4dtz7npMNAlquL0liVuhgs5tk2U8nf
+EgvqEksfWgf9sMfj2fo2zcO9277jOW37bhrPNIeondKT_Z-rrHw5PtueO4Vqm-5koXo63rxhC326
+jOPLQptvAvW6TO_1Di6_b52ON_eADzEOKN7uWVByIKR1XF-beBjgpnYuMkEU1wF4uTr6jduDSdC2
+_LwY28Hesm2mfsQ7oYJItDB96nd1_-wDScjZbXI37tNlnDZMbOtfot31Cypcy_LyOmsAZ9tM5SoK
+slYOLjbgzE0AXgBxH0pUKfAViRasX8VV3T5vDxBVSllZwEG3DYA3N10xDjSEX_EPQOUmbwsGlPDO
+edc67F36N63F1r6tONA_C3wBvH3CVzR9XYuP2jP2vD5rGHK9om6isDwcswqivec5xLo_S-q_5ipd
+vGsQscfvtI62w4dA25jGxKLtRPPUr_Jq-PYj3kmABtIufp3MvGOtRRTuX_b_XcoNUz3N6VCHYY05
+YxqrCcZ9eArkdZneaw1cvE3cBnEAbHU_atOfHkafKj4vKt7ue5-ju3SZp9TFn4NP40F-Om6NPrER
+yE5T1_KjAiG8X4uPB1Ca6mhfn3kxhPH4eBw6r6kvXqOAvV-44n_ZeheOcPVN3hW6tVzZgolt-TrS
+m6rCtVR__3kIwOl4q_pcgBgiqHjeTL9PCqRtFW-3FeBsay51MTh4bbHzieev4ipwnghwmyDFAbAJ
+ir7zmqBOgUoBbYI_fhctV5hxQ-q1UqoOVwfvC18M2cMxe6jj2vmOScFO27UBtgkqGCIYMvAObbi2
+XF9cj4GKQUX7drpsCMjwXuqi1sZWR-t2jV_2NZ_NQHYacoWUDbxtQBcSjhTcoccXzVeu7Avt13QB
+rt4ERtd6lzqbbzOmL4QxXE2w5QQgdenLjcN9c5mX_w4QhdIETFzPtaUwdgUtBS7ExlW-iqvAeSa6
+Fh8PQOPqdvErC8O_JbAdTz-iXe1fntK-G_-rd9GXhV38GtNYKVWjs8kvWRQeGCg2MHJ9XfrY_roo
+SmNV6sIIXiwbeG39uZhAXFz3J5Cdl0wQxXUAPK6O__YKeRPYbWujdQLjcSBs0_ama4AC1vTtVVqH
+YhsmtvXrSG_qCtdSZcsALQcPWofbNQGnLYzoHL5rdhEHaa4OgB5iX6L5wNalnmtn6gswtIHQZTzs
+Te8_6xVNQxUcB-CUcRiSffs1XYCLj-cfqrgs7-LG230NgE2whbbf7z59m_btCl4OogBc3MZUx31z
+FezDd82iZUBdtGwBY8bwGJKuLOzqX6Ld9Wtph5zkZ5WrSG57SwF4AcSdz0OVElSRaOHKkzdVpvca
+HMf2fWuNaayUqtH5Wb3K5bJ3USjwYh1_-SeBFYkWqtOP3xX8IF9PxVMYh2TSClMfPjyjx8EUiUQi
+0XRF8-WYnjIlZLnCEwCVn8mPBd7i8zLIHK7zlLpQpS5GiQNd4xCxEYlE8xPk8Cl6ypgQ5Uu0u34t
+7ZCT-KxyFTkDJN7uW4GnTb8Q89C6UhcqSuNR4OsSg0SV6vDrv17WsP39rj7-_9l7H5FI1F6nH79V
+nrypMr3X4DcVT8EcSmtMdUr5OXtbqfJuUPkuASwYMvAObbi2XF9cD__4Hde3izCQ4b3URa2NrY72
+7Rq-bJv19mMLSEWieYjCbmqe401XZq0w5WuQmqGnB2nyPrCgEPyGJAUlFfSBtra_uB7352DcNC_3
+ZoBoqYsHoFK4wmOr8wXt93roPly0-f1ePbgOf6NtTWPY2tF5mubg5hGJRP3AeCxf5cAG-tD_vuUa
+TwJUnpvHwelbFIAYik1w4eDpCqQm8NrAWurCCaIAaNyWq3OJCcTFdX_cPv-7WcGPe2-69vnfzxpQ
+aTvaHvcxzSESifoTzeFj_TY8asOu9dQ23sab3l28DSocPGgdbtcEnLYwonP4rtlFHKS5OgB6iH11
+gXIbAYzbzAl9BcQiUX-wBZAN7fviUZNfYxpT8o-hk-zsdFj6sK8C6FuqvN0Fibf7GgCbYAttv999
+_jbN2xW8HEQBuLiNqY775irYh8uaQ0OvyzjQd-v7XSAsEvUgCsOhfR88a2qzbguxvkqVK3X7vNlP
+6vihstNZ5clbLZD0IE3eFXou9djbvrl423gu6zG1AWDa6lzaUFCbvrvuD3zSAZif--18ADUHSdwO
+PFfHjcm1EYlE-cO4bz8E1zB0YV7wa7qIKXgX3dI3lemz0ikPHVF-agJvXzLBzwZb-I3r7zKmQFck
+Gii3EAb06YfmG-ftRb2-f-mAr28l_VndPm-2RseP6jXTZ5Unb95z5CqS2z6VM1elOvz6TwIhEi1U
+px_-VZ68VaCi4Arlp6aVUqq2SPw_hvfVLX1TSX6uxnEt_1bxeRlkDtd5Sl2oUheDXzBujUPERiQS
+zUuQmyO9qcEzlJ8C36hf4Q9leq8tfAzvpONr-TEcZAjITxkW8XbvtOZSFypKYxWl8eDwjbf7h3Wa
+1i0SiUQhQTc2z5r82rRxaIw3MZSfsgBuABGADH6HNlxbri_ux-DEoKJ9O13uv0DG76Uuam1sdbRv
+1-hl20ztfkz-7EUiUT9KIMcQBnTxY-HLxz8A2KSQgXHxSil12F2VUkqdrrvau219beaxwYJCkAMv
+FYDUpS83DvfNZV7uO0AUShMwcT3XlsLYFbQUuBAbkUgkorm5TO9ePsnPf0xeHytXb6Pyy9VbAQyb
+xZ0xyUN6Wk9hawKvaRxbSQ_rDVgobDFkXPu69LH1dbrUaaxKXRjBW4uhBby2-lxMIC6u_-v5778a
+XKePQh1em_PTtY9IJOKVbx550_ST-Kx_xIgRP6LqPdNnlSdvvfEqlLcCmIIYNu8DOyMEmcBSHXbX
+GoDBu8DY5l2Bx8GD1uF2TcBxhZFtLTYQ_wCPgy_FLFcHQA_xrzY65hd1TMLOJyAViaYlyNnpCeW7
+vN7GBF8KuymXTgCmwoP4eh8YUtA2gbdvxdt9DYBNsIW23_8_fZvm7QpeDqIAXNzGVMd9cxXsg1uz
+L1xPH--mB4iePgp1eI2rb7ieg61LOzoPeFNfgbpI1E7ADIDvLX3rPFYXXvXtX9T7_1fXQIVUkp-V
+7fP2J4ntrhV44Z0DcbbNVJ64H1SSn1WuIrntLQXgBRB3PnNVquT_5zxsEKbfALY28JraUQhDX248
+Dqa03tROJBI1K9_UKk-eVJnegwA402cvJoylVesknN6rh9Zz3rWsJbnrroItvFP4hphH5KcojYPB
+9wGyyf5-oO2iLiA8fRQVxH3nbNtXJBL9y82R3qhIb4KOOVXfGsAm_EV68wBm30X1HXTRdHXML-_D
+sGs9QK8LdClI4WnbVyAsEoXN4W3HAB5N1a9DBgwPvnQVnxcVbx_BEXqO79JlnlL-gUKUhgFVlzWa
+YmOCbBP0XNoAFKE9B20KTw6o0IeOybURiUR_ivQm_FjApSn6F-X_-jWlwCX5uVW-PHnzmiNXUa8g
+HQLApnloXamLwcHrE4NElSq5u50HFgdR3-4CTJFofOWbUuXJWw1USX5Wt9Q9r2Nl_uzFhLG0DgVf
+CFzXUh-2QcfjSpV3g8p3CWDBkIF3aMO15frienjH7bi_XYSBDO_l-gOj6kwtdbRv1-hl20y9--nn
+-O5dGrfqh-t-q8sYIpGouxKl-uTmwMJAn6JfdQUvDEo3PWXvAwsKwW9IUlBSQR9oa_uL63F-DsZN
+83JrBoiWungAKoURPLY6X9B_r4fuQyQSiUxMCQVigB2MN0W-liNvBxYMFKhrggsHT1cgNYHXBtZS
+F04QBUDjtlydS0wgLnMArmt8uvahMYPYzCVOIlHf8K1BOA873hS9M4Chc1P93LxLgrQB0yeRtk2y
+dA7fNbcFClcHQA_xr66xCPbjdwBpmzXbzlAkErnn6bbjTcU7ARgTm5bF5XV2h5ttz636xdt9LXk2
+wRbafr-79G2atyuUOIgCcCmUuDrumw_MQoHUtF68P7pWCluXdnQe8Ka_TVC3nWeIuIhEcxVwpa-x
+puatAAbQlun9YVPfmiN8faDnUo_97ZuLt43nsh5TGw4GtM6ljQlaPjHkYpB4wJv2p_Cl703fKFA5
+kHOxss3RFqgCX5HA9w9zIr1R_rBX2encaqw8eXsYb4qlFcAikSvQn2V9AOM2c0LfNvMLfEWLzyt6
+U5UAqTx5q8GZwtrF4-Gm5msAxhsw1dV8JpdGNIxMgOoCvdDwhr6lLlSUxl5Qjbd7gbBI5MKdJ-Ir
+_rFM714lp9Pxxr43te2qkGOFAMYQc7jOU_qigtXQcaBrDBmbKI0boRmlcbV-DElbOwx2WkfrcXzx
+HE13g8YBICwSLVWUK8-uVyEGmToMpw7Stoq3e6c1AxSawNBH7L6hQtdpWnebvXIQdQE1B2XcrqmO
+jsm1Ma0ZYgLfcbs2sRGJngW_kd5UfFmCX-cVzMMxe4Aw_MMxq3lTPXgKdFxPv_O_p_OtNia3prZA
+hkQJkMHv0IZry-XF9RieOBnTvp0uOoIOvJe6eICLqY727Rq-bPt4nl1gO1R-kUgUTvcsVQpSwQhl
+vP-4kxf_QjLSm979GiqrpOTjG-ImBh4HQwpJUzvaxjaXS7tMvzvDgkKQAy8VgNSlLzcO981lXu47
+QBRKE3RwPdeWwtgVtBS4EBuRSCSakorLaw3Crbno4ddA4jZlXwJocyBvAmyIfi5gobDFkHHt69LH
+1tdFURqrUhdG8GLZwGvrz8UE4uK6vzHlGp_ufUQi0cRzwV__DeXXUEkX4eNDi4Ml1J2ON2eY4rY_
+-QAqHDxoHW7XBJy2MKJz_K65LVC4OgB6iH11jUUo9Q3SPtYsEonCK9KbCpJDlOuhNnY4Zup0vD0A
+ltZjT7-TvhSqpjlCKd7uawBsgi20-X736ds0b9cEz0EUgEuhxNVx33xgFApKpvXi-dG1Uti6tKPz
+gDf1bYI6vhe0DtfTdvQOCNRFzySaz336hcz5GJJ9_5dod-1qu9Di8jrLg862mcpVJDe_I-hskPFR
+okqn86DQBtjawGtqR-cDfbnxuH3SelM7umbs4d2nTgAsekYlqlTb9GdriLaFN1W8-xh032sgcZtS
+tEyFAu8U1wcAbzMnB39OFKQ_7TCURaJn0_l4U0qpGkyhjtb3MQ7wbSi-hkq6CB8vEvWt4vNSwYcD
+ZhfohoI39C11oaI0Nq6Z1sXbvRW2ItFSBGA8HW-qcMyq0hfibceJ9KaC5BDlukuw4v2HKi6vcms8
+gBF6DtdEHRpUXdYYMjYu_4nS_GH-AElTO-BcHTcm14b9ZwhsIQ5Q4nhx7USipQH5dLzV4Ny3MCT7
+9muoxJP7_Hj-MasDLdO7SicG0raiSdq0Zg42Q8GXi12beLr2Me3TBlv8jevvMibXxrRmrh6D19TO
+9k0kemYIK6XU6XgbFMJD_DWQeCllCKjgBIghA_-QhmvL9cX1GKg4yXIJuq0wkOEdYMQBitbRvl3j
+l23b-VS_c4fuH1ICVJHoD2QpdCmITTCGusMxexgH19GxarmRcKJvv4ZKuohn8l1gSyHIgZdLpq59
+uXG4by7zct8BolCaoIPrubYUxq6gpcCF2IhEIhEWB0UTKGl9k7eNVcuDelNBsu_yArDIHywUthgy
+rn1d_tj6uihKY1XqwgheLBt4bf25mEBcXPc3plzj07UPjRnEpmucTPdvLvEXiaYkCsnQHmtNK_fu
+8Ya7gpZLXrYk15Tw2iZDOofvmtsChasDoIfYV8hz6fTDdQBpmzXbzjBUPELOIRItEcJ9efy_BjI-
+S9mn4u2_ltiaYAttv999_jbN2xVKHEQBuBRKXB33zQcYoUBqWi-eH10rha1LOzoPeFPfJqjbztMW
+F9f7A2MIhEUij-y_-3jgSAhPoYvbrHEj2mkuvi-YutRjb-vm4m3juazH1IaDAa1zaWOClk8MuRgk
+HvCm-Sl46XvTNwpUDuRcrGxzuAK1TVv4jtsCaF3nEYmmqM1Nq0hvKkDNvaTMgm-Yr_TYRb6K0rgR
+vmOvr61KXVRA9p2zbV9fUHNQ-n4AxBjKuE4kmnRe_QstCrG5edOeuHJNO03d4w2LliMToAB4XaAb
+Ct7Qt9SFitLYC6oA0Kb2AFRbO-jWBeoi0RRgPEfv03YFIJtLKRJR6DVBM0pjVeqiAiMGt6kdBjut
+o-UwHp2jCaJQUgjTdrQNhir0EdiKnkE0z8-BdxljNYdNikSucDHBj4KagzJu11RHx_TamNYMEIXv
+FKi_e6ZQ9u0vEk0FvpHeVPl-6p5jlm_5kmMXzVUm2Pr07zrGkBKgip76f9abqgTYTdVza25TrvFg
+dPAxfZnevQ4vPV3_vOR-K-6WOpWkJRKJRHOE8VR9qLFWALqplT5K8rP6Ee_q55a_VU8FZqJSFw_P
+TU3f8Zhtld7ea_-4MbWz1TWp_LzUHlxP29B_z6Q2Z9blnG3nEXIsbrxnOzvRc4nm-6n50GOuprKp
+RjidLirJz2z5I95V7U4-IqfxojRWURo-vHdRlzE4gOrsZ-WEhi8o3u6rB9dx71NQHwAJcfYh1hwq
+1t-wpWcq8BXNAb6R3lR8mIKHkqsLUa7ncDBJfla39G24i6CLWmIGb6oPkcB19tMJpFw7174_sDDB
+AL7Tdpz-hkBTuxDnRM8kSmPns3JpR_dpug_2O0EhaIufC5h92uHzEImmpkhvqhJgOJbHZZ9zreGF
+BqFvX6b3SV4CSOD4HZIuTaq0XdN4vgKo6uxnb-ulib8pScN3nOyxN72bvhWfF5VtM_e1UshwZ0Bj
+bvtGgcqBnDt32xxNa7bF1QRn2xim2DdBWSSaOozH8kPNtQIQDl0_g0pdVMnbeHgt4auzn9UDIO5D
+34k-RJL_Tv4mgDS1C-7ztoy565ma5nTtGyrmLnPgWMN73-EXiVr-f4QPQ-uh51yNtclngG_Uxo3J
+vk0yn6Mg4TeBxbUdB26uD0CvC3QpSF3O1dYXzty05tD6nqdpLhzzIdYkErWBb6Q3FS_G8FBydUOU
+6yECizc9deEEipMwrcfeBGc6hk3p7b0qdfaz8t-x09lPYztTXVsAFJ8Xti-238kc2kFiB29L8Fy7
+eLtXScfzanOmHLTpmXLnjM8Vj8m1CRF3rh39znl8PiLRLHKv3tR40afHZd9z2fwaXmgQuvo5Adc1
+qXMJuw0QOGFwct5Wz9W5wJf73rauyTfVN8m1n8-ZUSh3uQ9cm6a4md592vnGS4AsmhOM_-JDzmXz
+a6Bx6HLKypM3leTnp77A2TZTybP-pAYwDtV-ChKgip5JlB_h-RBz_Pg1VNAFdvFzkD7sVaQ3VTCk
+7K9sUnq6SOYRiQS_veQeKGndFPwqROAw3UUi_kPBA3eF_tHXqYtB_oRQ8Xlxqi8_L8a2ItEUhXMC
+5I62HucaWjelck0ToK8XiTjwcu9Gn-sBKN7uw-74adw7NEOvmYqOH2-3AmDR7GEcgktdx_rTr8v0
+riK9UW1LkQjDdMg7VOriAaKlLlSUxtU3XM-B1qUdnQe8qa8N6hiKNihjaMM79IUSf28az2dukWjs
+HNLWhxhjSL_GCroBmx9aefKmMn1u1Vcf9irScrH7-mnou1eZu82DoWQCL31v_kaByoGcwpSr59qZ
+1kzB6iqAMDcehqtr7ESiKcLXp8S5hNbNwa9cAoPpPZb0Ya-y5M27FPUj-CPAA-W_PvjaGBA6JwFd
+VED2nbNt3yEEkG4CtUg0Zk6hucXkcS6hdXMq1zQBTgG2ommrTO-se2ufN8-5DY94u2eB2RW6oeAN
+fUtdqCiNjWsGCHLf_oawLZYi0dRg7MKlprZT9itIiKZSJIJLU6b36vKELrtArwmaURqrUhcVGDG4
+Te0w2GkdrYfx6Bw2EGIAfgMRP9AGe9yX1sM7bUu-wSPwFU1VlDsch5razMmvBbYin58C3oOWefMa
+XKFhgh_tB4DSb1x-lzG5Nq5rNrVzrXdpJ9AVzSHPRHrDlkqp2jv9Nle-7hKw4vL65yX7W7HgcnPT
+T-Uz4B_A-iB9ee81GsA4VP82EhCKROacY8o9pm9z92tc6aN7lsqNIfGI9cegcyb5Wan8r7GUefLm
+NS6_C-Re9OJhrSKRSISAS9_fza-kqOet2_fN-qRvf0DtcOHL9F5djqHLMVXqYpA_Y6v4vKji88LW
+i0RTUZneF_MFwEuAdPqm0tNjkoWLUKb32vsYpQ9EQitK497BNwX4xtu9ird7ga9o8vBdSjlZAJ_O
+t8H6tOk3Rwgn_fkfdPSmKuEZy7f_WXVRPbgOf6NtTWPY2tF5mubg5qHQo_CDOlxv8lz-prFsUBaJ
+piKaF569XE-1IA7HbLB5lgBggHB2Oit9_Jd0y-Reh80YPndbPweMKI0r_HHvTd_iNK4Blbaj7XEf
+0xy2NWMP77TO1M5HXF8YW6ArmgOEl_BXoYN3Ot6qB9fhb7StaQxbOzpP0xw_kHWZbzY6vtYfcgmm
+Ugb9gRkQuqrURQVk3zld_35DEWDo2_4b2G0BCn3xmBj4ItEUVKb3xfh1HwE8HLMKWtx707fDMasB
+lbaj7XEf0xw_8HWZ71ku_STKvHm93zDiwAPA6wLdUPCGvqUuVJTGxjXTOgpFUzsfwXi2MeCbaZ0i
+0Zh5KdKbp-eroQLbBWCn460Csu_cbfvOTYfdVR1214d3FhR6oyK9qb2P6bsCswmaURqrUhcVGDG4
+Te0w2GkdrYfx6Bwm6H0DDx5cjyFoameDLZ3HNJ7AVjRV0bzw7OW6jyAC8LpANxS8oe-peAu2ninq
+dN2x75zK9M6_j_bz5v25QsMEP1oPAKXfuP4uY3JtTGvm6gGiFJqmfrZ2vjEUIIumCOEl_FUfATwc
+s0bYHY6ZOh1vNTACuE3tMNhpHa2H8egcpnm4saGPab4p6bC7Vg-2TZd8KmWrH9UARp-_XccIpXi7
+DwZCAapozirT_1N7rBf1-v4V6Y0q07vyKYvLKzsghZ2vMAjnpnj-4R3HLmV6uqjb5594uSrbZkof
+ppWg09NF5SqSzCMSLVSJKlWevNVgBXlu7t5WrkIHsis4D8dslvAdSpHe1MoqbrurOuyutXfw3Bh4
+nLH92Cp1MUgfrOLzwr779u2q4vPCjhdyDpGobX57hhJgy-m1HPl8VKb3ekX_7-V03bHvTePQMUfx
+aB8uwIi3_7A-fRr3em50zV3hFmr-plgKfEVTgPAS-KptkDY3LTdlgHhEeqPK9F4dGi27XvKplG1U
+6qJ6cB3_RtuaxrC1o-M0zcHN4wpQgN83HPGDv3O_CZo_7UIBXiRq9V_n91l7H7UG8Lfi-Yfa3LSU
+_4-eLiIcrqnsesmnUrqIg0OUxipK4wcQQj31FI7QxtQO10FbXHJz4DF9gObSlvseb-f-e5rgyrVz
+gbJINDR851RGetO6fycAi8Ir0puHEh7OZ9vM68FjuIw-hA8eQwRA7wSgiwdIu87Ztq8JvgDMPmWC
+Mi5FojHz39RLgHAbv5Yjn47K9N5Yh71O2ybnf2PYxh-M5_0ABcDsCt1Q8Ia_pS5UlMbGNZtA6NO_
+LeRhLts6bPEWiYaC8BL8So57-MtWpvfqUJZadoFeEzSjNFalLiowYnCb2mGw0zpaD_PROZpACCWF
+cJu_pnZ0fAxVmE9gK5qSyvQ_aR9SAuARL1iZ3mvvSy6b5AoIE-woqDko43ZNdXRMro1pzQBC_E6h
+aKpz7esTLwpl3-4iUV_5cSplpDe9jS8AHvhyRXpTPUop8X-LNjLB1qd-1zHmIgGqaA6ieWEKJeTt
+PvxajnwY8HLv3your-XGGek8Ib_56Yf1B-G53BGRSFSH8BL8So67X-BCsLnynqWz2s89S6376VKO
+ek66GKSPUkoVn5dW39qO22bM4vPC9uuyPpHIJ2_O6YeUALjnCwTvpnKuewtdhgBYW0Vp3GvMXNbc
+dV-xdh9srfF2-zCewFc05-xiKyO9GWVepZRay5GHvTyR3jh7lc1vjz77846Hb7x18QDRUhcqSuPq
+G67nYOvSjs4D3tS3CeoAM4AcQI9CDnv4jtvh-hTCvtC3Ady0PpGoj-yC88KzewFwIPBy7y7eptPx
+ppRS6nC0k7qp3el4axzDtZ3v-px87hYPAEHthyXgpe9N3yhQOZBTmHL1XDvTmil4m-aKwWcaz9Sm
+CZrcWjigi0RDQngpfiXH3Q28EMy2ZRMMXeDr0i70zxG6DLpGBoTOZ6qLCsi_c7bti6HnCsw_9Q10
+Duou6xOJQuTVPv2UJADueEHgvW3pqtPxVnt8_uH_uI5_p_1sew9dugCKgw9Arwt0KUjhadsXIGxa
+swl4GLAAwL6BB3PY1smtTyTqM7eGLCO96S1vdS3XcuSOyfXvIUZ6U7ssXbzKmqGplFKHY6YOx3_N
+OWhCO6rDMVOn44391qZdyP0-xKMlMF3aABShPQdt3I4DKu5Px_Ta2KDnAjP43gRh_A4gBXhz7eic
+nHddn0jUd559di8AdlCZ3tn3EN4HhhS0rtA0jW_Ctmssgvm8eV5XGJjgZ4Mt-sb1dxmTa8Ot2bYP
+_o2C0NTXdR7XGPrMIxL1AeGl_JUct-kSlOm9ClZfpasAtL7AbBoLQOz7c4wVBxcw_vTvOkafirf7
+XqEnQBVNUWV67_TnJAGw4QLAofZd_oITnqZ2WADapn4u7aYQB5FI9NzwXUopAP6rSG9Umd5VpDfV
+A-V9ehsMqcePqZ2tDupt-en4XJxCx2P0n14Xg-TpQ8XnpdN3Ux_uX5uxRCLfPNy1hDw_B7_WI1eq
+TO-s_xB_zrHq4jGEfeEQb-dhf-o07h2Sodc89FoFvqKhIbwEv1oqcCO9qUoclKHLuf4cXfaL3ymg
+vc5RF9WD6-A32tY0hq0dnadpDm4eCjMKNKjD9Sbf1M5UZ1qHSzsOyiJRX-nZ5p9JkwRwkp9Vero0
+ll0OFt7HLDc3PavLsrnp1vvF8MXfMIybxIEgSmMVpfEDCKGeegpHaGNqh_ugLS65OfCYdM3gvx8A
+H66ztTPJZTzXvq7wFon6hO9SyvVUD_L2ebM3OH6oTJ_VTpuTDE78OOFPwcf7j0mtx_ZV_ieOzu3J
+jwXfuLMIKQxA7wRAAO0zJ-Rtmt8Vblw7gGqfgMRz0PlwnUgU-N8lueHZ-WQB7ATp9E1lp7PKkzdj
+0sclfRffj_fASut84WtK-K7QGwLe0LfUhYrS2LhmWhdv91bY9imY1zYXB2SRqE8IL8Wv5n5Y3xBO
+8rMRAlIOV3JQ9QV4G_g1QTNKY1XqogIjBrepHQY7raP1MB6dwwSzb5DBg_sx3EztXIT7crClbU3z
+CmxFon71ot7fvyK9qaA1hTI9XdTt82Zf_fGjZjN9VvogCWNohTjzJD_rXEXeczfBzqU-wHRsARyH
+hJ5AVjQVJapUefI2KQ4NUa5me2LH1-qDgACP_P48vFMIt-Gt4d8RnFEaTwK_AN6hYSjwFU1NXXPJ
+3Pz62Q6wTO-ie-IYmBSeXb1IJBL1kVum7FdTP4zD7qoOu_vDe9PhSRmuhGcI4ItEItFSNHkAn647
+dbruHt5NgoQuZbfSFNNIb4J7kUgkWmKenTyAD7tr9WBvUqQ31SO_vcdw7NuLRCLRELlman499QM5
+XXdWT1Wmd-EtPIYwePpj9OlFIpFojNwzpl9NPfiH3VUddtfaO3hbfymbS1o3JPCpL3Xx8NjU9B2P
+6av09l57aD3X1lfF56X24HrahvbrQ77j_sRIJBLxmhSAy-T_kKBP1506XXe1d-CmMaRsLuE90pva
+tzG8UkpFaayiNH5476IuY_jsZ-UAWLCndW2gE2-31YPruPepicYnRDxEoqXl4fXYAa8S8N-EDL7r
+eDTBi3_86KbYD_0bf0pd1IAK3lQfAt5jqPi8WMEL32k7zn_DvakdrhOJpqCxc9HQflQAl_mdr8vD
+jbl0b7voU-I2_GLARmmsojSu1VdjknZN49mU3t7V9zp19tNYp7OfVV0I4GJocoLvFKAUvPTd9I3W
+cW1d4hQqHiLRFHNTn341NHAjvalKvBhaZtvM66Gbk3JTxXpI4Hf1ne6XLlSpC-vP7QBfnf2sHgwU
+W10bfUPQFXRNIKfg5sbl2pnW5QvfEPEQiZamQQCMkyy820p92Ld6XMd-5pLGHUN4qj4UfKM0bgRs
+E6DnKAB5Ezhd27lAWiTqkxVLKdd9BxMnWPH9efwOkJuLtylK4wqaGK60HnsTnOkYJqW39_pdZz_r
+EuqhDrfFdQCxJtCZwEf7Yv8NUGgHMMXANM3JtaN1TWO4yBQPkchFc8tdXf2Len--wpUhStFwl-UZ
+lORnlavoac6lDXxFoiUrUaXKk7fF7XsdcrCQEJeSLyl44ducfa7eVJKfn_anyraZSiSnikTOWhp8
+IQ__qPf3Lx8IFJfXRV6QzU2POv-Y4B_zxBd2CeXSz7vve0T-KfGSY4b_vyHeXgC_Z_ki4YshDD8y
+hsIQfsi5puaXtveln7fcH-HP5gG4AuCOAB5CNBmLRCKR6Pm0Eii0g2MfJRfjMr0vyi9tz0s7X7lP
+04yRqB9BrE2lE4DL9B7s0E7Hm1NdKLmO7dquKaBtS3iP9Kb27dk9F9clxGCp5z3EfcL5SsrH0hQz
+KfvL6xxDlFLqRb2-f8GB4JImi28Vl9cgQDwcs96A23Y_l3abm67Fg8bHx3fp_wyeXsil7X3p5y-3
+Sfwze6VUxVMQ51kAm3TPUivAlFIVxMCb6qCe9nMdy1bPfcfz4XHxGmxjAYC7ypQ0RCKRSLQsrSid
+ARCm0gTfwzF7gBmtA7BBPQc717FwOxMwufm6tLPFxaWEGGMtwS9xz0vc6xheYuAWI9Ewgti7liua
+JJvKqQhgjCHt268JtiECTPtiCD_7By1pz9gv7byH8L75aomlKWZS9lPi_8jlfptfRXqj4IFkafM_
+6gI6V5gCUH3W1KYfholLvOAdA2gpnoPvkmKB977UGPQRU9O-JaXctSnkujZ6Ue-vX66N71lqBRtA
+EYOuqS2GIO5rGgveuX6meel8pjXSeak2N20Fs0gkEolErlphsruUJh2OmRFctrbwjvtynr5z-Uzw
+pPOZ2rrsgYsHfi-Te639s-sl7pmLgcRC7tcU7p9oGMEZdC1Xvh1c5QrjuQYewxfHaAme3oslxqBM
+7_w-stRYhPJQhkpwz1iaYiblMCVlQBf-Eu2uX-gDJFjOF5fXp4Sqq_L9hzE2S-JL3rucf38xlViI
+n0PuA0V609m-qPf3CsAuumfp4uErEolEIlFXrYDsrmW8-1Cbm15Eid9BZXqvBfDZ-RL3bPMSC7lf
+Y8RINK7gTEKXL_r9-UvC_0_R3qgyvS_2lBjUS-hZJBbh7hf918TbvZTTuLN9_Jdod60AjJPO0vyS
+90619FjAT7L0GMj9Er-0-793AKv39wrAS5QpSYhEIpFI1KdWAKAllfgp03stIEvwS9yzq5dYhPUS
+A7cYiaYhOJuhytXQE45d0joM4Wf3oCXt2cXjeyGx6R7LMr0vJp9I_bx8GMK-RLvrF01Az_ifeW_y
+925eYiD3TfyyvVJKRXpTg_MQ-kW9v1cAfibRBCsSiUQi0ZS0AlA9S0nfy-Re2-Cz_yXu2cdLLOS_
+jREj0bQEZzR2uZrKQrqWGL742xI8jccSY2Dz_KeT2ITxz5I3pFxeSZkxpn_JdtcvmqDm4umm5rT2
+kH7Je3e9JxITuW-ixWP4RXozun9R7_8VgOciE4RFIpFIJJqLVgCzOZQceMv0vii-xD37eImF3Lcx
+YiSatuDMJlXmV7Wa5MIsiSDSm1qbZ-fcBVpaDFy8xCKsn3pekFJK15KyZAo_Ot1U8XlR-wcCdxTD
+qwrHZAAAABB0RVh0TG9kZVBORwAyMDExMDIyMeNZtsEAAAAASUVORK5CYII=
+:: list_files.lua
+--[[pod_format="raw",created="2024-08-21 13:40:02",modified="2024-08-21 15:18:33",revision=209]]
+function list_files(path, ignore_list)
+	file_list = {}
+	to_process = { path }
+	while #to_process > 0 do
+		local top = table.remove(to_process)
+
+		-- if top of list does not end with a /
+		-- add the slash to make path joining easier
+		if not top:find("/$") then
+			top = top .. "/"
+		end
+
+		local files = ls(top)
+		for i = 1, #files, 1 do
+			local f = top .. files[i]
+			local f_type = fstat(f)
+
+			-- check if file passes all ignore rules
+			local include = true
+			if #ignore_list > 0 then
+				for rule in all(ignore_list) do
+					include = include and not f:find(rule)
+				end
+			end
+
+			if include then
+				-- if folder, then add to to_process table to traverse it
+				if f_type == "folder" then
+					table.insert(to_process, f .. "/")
+				end
+
+				-- if folder and folders are enabled, add to file list
+				if f_type == "folder" and settings.show_folders then
+					table.insert(file_list, f)
+				end
+
+				if f_type == "file" and settings.show_files then
+					table.insert(file_list, f)
+				end
+			end
+		end
+	end
+
+	return file_list
+end
+
+:: main.lua
+--[[pod_format="raw",created="2024-03-15 13:58:36",modified="2024-12-12 07:23:51",revision=3144]]
+-- fuzzy finder v1.1
+-- by Arnaught
+
+include("fzy.lua")
+include("pad.lua")
+include("list_files.lua")
+include("open_file.lua")
+
+include("default_settings.lua")
+
+cd(env().path)
+argv = env().argv
+
+function _init()
+	printh("-- fuzzy finder start --")
+
+	window({
+		width = 256, height = 128,
+		title = "Fuzzy Finder"
+	})
+
+	ignore_file = default_ignore_file
+
+	list_mode = "FILESYSTEM"
+
+	if not fstat("/appdata/fuzzy_finder") then
+		mkdir("/appdata/fuzzy_finder")
+	end
+
+	if not fstat(default_settings_file) then
+		store(default_settings_file, default_settings)
+	end
+
+	settings = default_settings
+	if fstat(default_settings_file) == "file" then
+		local loaded = fetch(default_settings_file)
+		--- @cast loaded table
+		for k, v in pairs(loaded) do
+			settings[k] = v
+		end
+	end
+
+	-- process commandline arguments
+	-- - in lua means * in regex.
+	positional_args = {}
+	for i = 1, #argv, 1 do
+		if not argv[i]:find("^%-%-") then
+			table.insert(positional_args, argv[i])
+		else
+			if argv[i]:find("%-files") then
+				settings.show_files = not argv[i]:find("%-no%-")
+			end
+
+			if argv[i]:find("%-folders") then
+				settings.show_folders = not argv[i]:find("%-no%-")
+			end
+
+			if argv[i]:find("%-execute%-lua") then
+				settings.execute_lua = not argv[i]:find("%-no%-")
+			end
+
+			if argv[i]:find("%-execute%-p64") then
+				settings.execute_p64 = not argv[i]:find("%-no%-")
+			end
+
+			if argv[i]:find("%-clipboard") then
+				settings.clipboard = not argv[i]:find("%-no%-")
+			end
+
+			if argv[i]:find("%-index") then
+				settings.show_index = not argv[i]:find("%-no%-")
+			end
+
+			if argv[i]:find("%-copy%-index") then
+				settings.copy_index = not argv[i]:find("%-no%-")
+			end
+
+			if argv[i]:find("%-follow%-loc") then
+				settings.follow_loc = not argv[i]:find("%-no%-")
+			end
+
+			if argv[i]:find("%-ignore") then
+				if argv[i]:find("=") then
+					--- @type string[]
+					local l = split(argv[i], "=", false)
+
+					if fstat(l[2]) == "file" then
+						ignore_file = l[2]
+					end
+				else
+					settings.ignore = not argv[i]:find("%-no%-")
+				end
+			end
+
+			-- if argument is --list=file
+			if argv[i]:find("%-%-list%=") then
+				--- @type string[]
+				local l = split(argv[i], "=", false)
+				local list_path = l[2]
+				-- check if param is a file
+				-- if it is, set list mode to file mode
+				-- and open the file
+				-- also enable clipboard mode
+				if fstat(list_path) == "file" then
+					list_mode = "FILE"
+					settings.clipboard = true
+					local list = fetch(list_path)
+
+					--- @cast list string
+					file_list = split(list, "\n")
+				end
+			end
+		end
+	end
+
+	if not fstat(default_ignore_file) then
+		store(default_ignore_file, table.concat(default_ignore_list, "\n"))
+	end
+
+	-- load monospace font into second font slot
+	-- use print("\014") to use this font
+	fetch("/system/fonts/lil_mono.font"):poke(0x5600)
+
+	selected = 1
+
+	-- create a text editor for the search box
+	g = create_gui()
+	ce = g:attach_text_editor({
+		x = 0, y = 0,
+		width = get_display():width(), height = 14,
+		bgcol = 24, fgcol = 7,
+		width_rel = 1.0
+	})
+
+	ce:set_text("")
+
+	-- the current string used for filtering the list
+	filter_string = nil
+	-- the results of the filtering
+	filter = {}
+
+	-- set path to the cwd or / by default
+	path = env().path or "/"
+	-- if there's a positional argument, set the path to that
+	if positional_args[1] then
+		path = positional_args[1]
+	end
+
+	-- only traverse filesystem if index is enabled
+	if list_mode == "FILESYSTEM" then
+		local ignore_list = default_ignore_list
+		if settings.ignore and fstat(ignore_file) == "file" then
+			local ignore_list_raw = fetch(ignore_file)
+			--- @cast ignore_list_raw string
+
+			-- filter out blank and commented rules
+			for rule in all(split(ignore_list_raw, "\n", false)) do
+				if rule != "" and rule[1] != "#" then
+					add(ignore_list, rule)
+				end
+			end
+		end
+
+		file_list = list_files(path, ignore_list)
+
+		-- if folders are shown,
+		-- include top level folder in output
+		if settings.show_folders then
+			table.insert(file_list, 1, path)
+		end
+
+		-- subprocess to filter the list
+		-- nil when not running
+		filter_routine = nil
+	end
+
+	index_length = 0
+	if settings.show_index then
+		index_length = #tostr(#file_list) + 1
+	end
+
+	scroll_offset = 0
+
+	-- get the total number of entries that can be displayed onscreen
+	-- update it when the window is resized
+	max_display = flr((get_display():height() - 16 - 7) / 10)
+	on_event("resize", function()
+		max_display = flr((get_display():height() - 16 - 7) / 10)
+	end)
+end
+
+function _update()
+	ce:set_keyboard_focus(true)
+	g:update_all()
+
+	-- if there are multiple lines, then user pressed enter
+	if #ce:get_text() > 1 then
+		-- move cursor to end of line in case user selects invalid item
+		ce:set_cursor(#ce:get_text()[1] + 1, 1)
+
+		-- continue if there is at least one search result
+		if #filter > 0 then
+			-- selected is indexing the search filter, which gives us
+			-- the index for the file list
+			local selected_index = filter[selected][1]
+			local selected_path = file_list[selected_index]
+			--- @cast selected_path string
+
+			open_file(selected_path, selected_index, settings)
+		end
+	end
+
+	-- get first line of search text
+	local search_text = ce:get_text()[1] or ""
+	ce:set_text(search_text)
+
+	-- if current filter string is different than search text
+	-- start filtering process
+	if filter_string != search_text then
+		filter_string = search_text
+
+		filter_routine = coroutine.create(fzy.filter)
+		-- search file list for the search text
+		-- ignore whitespace in search
+		local err, res = coresume(filter_routine, search_text:gsub("%s+", ""), file_list, false)
+
+		if res != nil then
+			filter = res
+		end
+	end
+
+	-- if filter routine exists, and coroutine is not dead, continue it
+	-- otherwise remove the routine
+	if filter_routine and coroutine.status(filter_routine) != "dead" then
+		local err, res = coresume(filter_routine)
+
+		if res != nil then
+			filter = res
+		end
+	else
+		filter_routine = nil
+	end
+
+	-- if up or ctrl+k or ctrl+p
+	if keyp("up") or key("ctrl") and (keyp("k") or keyp("p")) then
+		selected -= 1
+	end
+
+	-- if down or ctrl+j or ctrl+n
+	if keyp("down") or key("ctrl") and (keyp("j") or keyp("n")) then
+		selected += 1
+	end
+
+	-- quit on ctrl+q
+	if key("ctrl") and key("q") then
+		exit()
+	end
+
+	-- keep selected inside of the range
+	selected = mid(1, selected, #filter)
+	if selected > (max_display + scroll_offset - 2) then
+		scroll_offset += 1
+	end
+
+	if selected < (1 + scroll_offset) then
+		scroll_offset -= 1
+	end
+end
+
+function _draw()
+	cls(1)
+	-- print total number of files and number of filtered files in bottom of window
+	print(string.format("Total: \fs%d\f7, Filtered: \fs%d\f7", #file_list, #filter), 0, get_display():height() - 8)
+	-- draw text editor
+	g:draw_all()
+
+	-- if search results exist, print selection arrow and background box
+	if #filter > 0 then
+		rectfill(0, 6 + (selected - scroll_offset) * 10, get_display():width(), 13 + (selected- scroll_offset) * 10, 2)
+		print(">", 0, 6 + (selected - scroll_offset) * 10, 7)
+	end
+
+	-- print search results on screen
+	for filter_i = 1 + scroll_offset, min(max_display + scroll_offset, #filter), 1 do
+		local line_i = filter_i - scroll_offset
+		local i, p = unpack(filter[filter_i])
+
+		local entry = file_list[i]:gsub("\t", " ")
+		if settings.show_index then
+			entry = right_pad(tostr(i), index_length) .. entry
+		end
+
+		-- print in monospace
+		print("\014" .. entry, 8, 6 + line_i * 10, 7)
+		-- reprint matching positions in green
+		for pos in all(p) do
+			print(
+				"\014" .. entry:sub(pos + index_length, pos + index_length),
+				8 + (index_length * 5) + (pos - 1) * 5,
+				6 + line_i * 10,
+				11
+			)
+		end
+	end
+
+	-- if filter routine exists and is not dead, display an hour glass
+	if filter_routine and coroutine.status(filter_routine) != "dead" then
+		spr(1, get_display():width() - 16, 0)
+	end
+end
+
+:: mergesort.lua
+--[[pod_format="raw",created="2024-08-20 16:28:55",modified="2024-12-12 07:23:51",revision=2172]]
+-- https://github.com/TheAlgorithms/Lua/blob/main/src/sorting/mergesort.lua
+-- MIT License
+
+-- list - list to be sorted in-place
+-- less_than - function(a, b) -> truthy value if a < b
+function sort(list, less_than)
+	less_than = less_than or function(a, b)
+		return a < b
+	end
+	-- Merges two sorted lists; elements of a come before those of b
+	local function merge(result, list_1, list_2)
+		local result_index = 1
+		local index_1 = 1
+		local index_2 = 1
+		while index_1 <= #list_1 and index_2 <= #list_2 do
+			-- Compare "head" element, insert "winner"
+			if less_than(list_2[index_2], list_1[index_1]) then
+				result[result_index] = list_2[index_2]
+				index_2 = index_2 + 1
+			else
+				result[result_index] = list_1[index_1]
+				index_1 = index_1 + 1
+			end
+			result_index = result_index + 1
+		end
+		-- Add remaining elements of either list or other_list
+		for offset = 0, #list_1 - index_1 do
+			result[result_index + offset] = list_1[index_1 + offset]
+		end
+		for offset = 0, #list_2 - index_2 do
+			result[result_index + offset] = list_2[index_2 + offset]
+		end
+	end
+
+	local function mergesort(list_to_sort, lower_index, upper_index)
+		if lower_index == upper_index then
+			list_to_sort[1] = list[lower_index]
+		end
+		if lower_index >= upper_index then
+			return
+		end
+		local middle_index = math.floor((upper_index + lower_index) / 2)
+
+		local left = {}
+		mergesort(left, lower_index, middle_index)
+		local right = {}
+		mergesort(right, middle_index + 1, upper_index)
+
+		merge(list_to_sort, left, right)
+	end
+	mergesort(list, 1, #list)
+end
+:: open_file.lua
+--[[pod_format="raw"]]
+function open_file(path, index, settings)
+	if path:find("%.loc$") and settings.follow_loc then
+		local loc_path = fetch(path).location
+		return open_file(loc_path, index, settings)
+	end
+
+	-- will file be executed
+	local exe = false
+
+	-- shift key toggles clipboard
+	-- if clipboard is enabled, selecting an item will copy it to the clipboard
+	-- if disabled, selecting it will open it
+	-- shift inverts
+	if settings.clipboard != key("shift") then
+		if settings.copy_index then
+			set_clipboard(tostr(index))
+		else
+			set_clipboard(path)
+		end
+	else
+		-- similar to clipboard
+		-- if execute p64 is enabled, selecting it will run it
+		-- if disabled, selecting it will open it
+		-- ctrl inverts
+		if path:find("%.p64$") or path:find("%.p64%.png$") then
+			exe = settings.execute_p64 != key("ctrl")
+		end
+
+		-- same as execute p64
+		if path:find("%.lua$") then
+			exe = settings.execute_lua != key("ctrl")
+		end
+
+		if exe then
+			create_process(path)
+		else
+			create_process("/system/util/open.lua", { argv = { path } })
+		end
+	end
+
+	exit()
+end
+
+:: pad.lua
+--[[pod_format="raw",created="2024-08-21 13:09:32",modified="2024-08-21 15:18:33",revision=289]]
+function left_pad(s, len, pad)
+	if not pad then pad = " " end
+	while #s < len do
+		s = pad .. s
+	end
+
+	return s
+end
+
+function right_pad(s, len, pad)
+	if not pad then pad = " " end
+	while #s < len do
+		s = s .. pad
+	end
+
+	return s
+end
+
+:: .info.pod
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTA4LTIwIDE1OjQ1OjQxIixpY29uPXVzZXJkYXRhKCJ1
+OCIsMTYsMTYsIjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDEwMTAxMDEwMTAxMDEw
+MTAxMDEwMTAxMDEwMTAxMDEwMTA3MDcwNzA3MDcwNzA3MDcwNzA3MDcwNzA3MDcwMTAxMDcwZDBk
+MGQwZDBkMGQwZDBkMGQwZDBkMGQwNzAxMDEwNzBkMDcwNzBkMDcwNzBkMDcwNzBkMDcwZDA3MDEw
+MTA3MGQwNzBkMGQwZDA3MGQwNzBkMGQwNzBkMDcwMTAxMDcwZDA3MDcwZDA3MGQwZDA3MDcwZDBk
+MGQwNzAxMDEwNzBkMDcwZDBkMDcwNzBkMDcwZDBkMDcwZDA3MDEwMTA3MGQwZDBkMGQwZDBkMGQw
+ZDBkMGQwZDBkMDcwMTAxMDcwNzA3MDcwNzA3MDcwNzA3MDcwNzA3MDcwNzAxMDEwNzA3MDYwNjA2
+MDYwNjA2MDYwNjA2MDcwNzA3MDEwMTA3MDcwNjA2MDYwNjA2MDYwNjA2MDYwNzA3MDYwMTAxMDcw
+NzA3MDcwNzA3MDcwNzA3MDcwNzA3MDYwMTAwMDEwNjA2MDYwNjA2MDYwNjA2MDYwNjA2MDYwMTAw
+MDAwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw
+MDAwMDAwMDAwIiksYXV0aG9yPSJBcm5hdWdodCIsbW9kaWZpZWQ9IjIwMjQtMTItMTIgMDc6MjM6
+NTkiLG5vdGVzPSJRdWlja2x5IGZpbmQgYW5kIG9wZW4gZmlsZXMhIixydW50aW1lPTEyLHN0b3Jl
+ZD0iMjAyNC0wMy0xOCAxNToxMDoyOCIsdGl0bGU9IkZ1enp5IEZpbmRlciIsdmVyc2lvbj0iMS4x
+Iix3b3Jrc3BhY2VzPXt7bG9jYXRpb249Im1haW4ubHVhIzk5Iix3b3Jrc3BhY2VfaW5kZXg9MX0s
+e2xvY2F0aW9uPSJmenkubHVhIzIzNyIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0ibWVy
+Z2Vzb3J0Lmx1YSM4Iix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJkZWZhdWx0X3NldHRp
+bmdzLmx1YSMxIix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJnZngvMC5nZngiLHdvcmtz
+cGFjZV9pbmRleD0yfSx7bG9jYXRpb249Im1hcC8wLm1hcCIsd29ya3NwYWNlX2luZGV4PTN9LHts
+b2NhdGlvbj0ic2Z4LzAuc2Z4Iix3b3Jrc3BhY2VfaW5kZXg9NH19XV0=
+:: [eoc]
