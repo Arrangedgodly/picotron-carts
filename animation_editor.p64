@@ -4,11 +4,11 @@ version 2
 :: afx/
 :: afx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTEyIDA2OjU4OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxNjoyNToyNSJdXQ==
+Mi0xMiAxODowMjowMiJdXQ==
 :: gfx/
 :: gfx/0.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxNjoyNToyNSIscmV2aXNpb249NTEyXV1sejQAYgIAAM4yAADzIXtbMF09e2JtcD1weHUA
+Mi0xMiAxODowMjowMiIscmV2aXNpb249NjU2XV1sejQAYgIAAM4yAADzIXtbMF09e2JtcD1weHUA
 QyAQEATwVgcQB8AX0BfABxAH8FYsZmxhZ3M9MCxwYW5feAgAy3k9MCx6b29tPTh9LD4A-xkDBtAW
 0AYQJpBWkBYQBqAGIAYwRkBmAAZgFkAWYAZAFsAWwBbQBvAmWAAd8AYXJwAXYIdQRyAXUBcwJ7AX
 0DfgB8AIAH8nwCfgB-AVUAAd-woWXxaALrAe0A7gXqBOgC6QPrBu0D6gTuAuSwAf-yMUNbAFQCVg
@@ -22,26 +22,26 @@ sA4grABATiAesBwA-yZeIB7ADjA_EC4wDtBOAA4APjAu8AFOMD4ADvACDgC_8AIOMD4AHvAFTjBe
 ----------------------8vUG09NH19
 :: gfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxNjoyNToyNSJdXQ==
+Mi0xMiAxODowMjowMiJdXQ==
 :: map/
 :: map/0.map
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxNjoyNToyNSIscmV2aXNpb249NDgzXV1sejQAaAAAAFgQAADwCHt7Ym1wPXVzZXJkYXRh
+Mi0xMiAxODowMjowMiIscmV2aXNpb249NjIzXV1sejQAaAAAAFgQAADwCHt7Ym1wPXVzZXJkYXRh
 KCJpMTYiLDMyAwAvIjABAP--------------------vxCCIpLGhpZGRlbj1mYWxzZSxwYW5feD0w
 CADSeT0wLHRpbGVfaD0xNgoAEHcKAIB6b29tPTF9fQ==
 :: map/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxNjoyNToyNSJdXQ==
+Mi0xMiAxODowMjowMiJdXQ==
 :: sfx/
 :: sfx/0.sfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxNjoyNToyNSIscmV2aXNpb249NDc3XV1sejQAoAAAAAsKAAD-MHB4dQADKAAABAAED0AQ
+Mi0xMiAxODowMjowMSIscmV2aXNpb249NjEyXV1sejQAoAAAAAsKAAD-MHB4dQADKAAABAAED0AQ
 Ag4AAaABIAKgDgAPEAAN8MoBAgNADw_QBAUGB0AMkAgJCgtADJAPDA8NDw4MQAzw-wEA6-8nqgEQ
 Bg8gEAEgASAB8AACEAIOEAEgDyEgATAPQPDDDygP--DGD-gKD-8PgA-3Dw0B8AkBEAYOMAD-----
 -70f-wEArM-ID0AADxBA--_w8P8BAP-qUP----8p
 :: sfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxNjoyNToyNSJdXQ==
+Mi0xMiAxODowMjowMiJdXQ==
 :: vgfx/
 :: vgfx/0.vgfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU3OjMwIixtb2RpZmllZD0iMjAyNC0x
@@ -51,9 +51,9 @@ CQDzDjAsNDB9fSxzaG93PXRydWUsdHlwZT0iZWFyIn0saAATOGgAEjJnAE8zNzc0ZwALFS1oAD8x
 MyxmAApQciJ9fX0=
 :: vgfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU3OjMwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxNjoyNToyNSJdXQ==
+Mi0xMiAxODowMjowMiJdXQ==
 :: gui.lua
---[[pod_format="raw",created="2024-12-11 21:26:33",modified="2024-12-12 16:25:25",revision=539]]
+--[[pod_format="raw",created="2024-12-11 21:26:33",modified="2024-12-12 18:02:02",revision=726]]
 gui = create_gui()
 
 local colors = {
@@ -92,12 +92,26 @@ local loadBtn = menuBar:attach{
 	width=80,
 	height=15,
 	clicked = false,
+	hovered = 0,
 	draw = function(self)
 		fillBG(self, self.clicked and colors.button_select or colors.button_unselect)
-		print("Load", 32, 5, colors.button_text)
+		if self.hovered > 0 then
+			print("Load", 32, 5, colors.container_bg)
+		else
+			print("Load", 32, 5, colors.button_text)
+		end
 	end,
-	click = function(self) self.clicked = true end,
-	release = function(self) self.clicked = false end
+	click = function(self)
+		self.clicked = true
+		popup_open = true
+	end,
+	release = function(self) self.clicked = false end,
+	hover = function(self) self.hovered = 2 end,
+	update = function(self)
+		if self.hovered > 0 then
+			self.hovered -= 1
+		end
+	end 
 }
 
 local saveBtn = menuBar:attach{
@@ -106,16 +120,30 @@ local saveBtn = menuBar:attach{
 	width = menuBar.width,
 	height = 15,
 	clicked = false,
+	hovered = 0,
 	draw = function(self)
 		fillBG(self, self.clicked and colors.button_select or colors.button_unselect)
-		print("Save", 32, 5, colors.button_text)
+		if self.hovered > 0 then
+			print("Save", 32, 5, colors.container_bg)
+		else
+			print("Save", 32, 5, colors.button_text)
+		end
 	end,
 	click = function(self) self.clicked = true end,
-	release = function(self) self.clicked = false end
+	release = function(self) self.clicked = false end,
+	hover = function(self) self.hovered = 2 end,
+	update = function(self)
+		if self.hovered > 0 then
+			self.hovered -= 1
+		end
+	end
 }	
 :: main.lua
---[[pod_format="raw",created="2024-12-11 20:55:39",modified="2024-12-12 16:25:25",revision=643]]
+--[[pod_format="raw",author="Arranged Godly",created="2024-12-11 20:55:39",modified="2024-12-12 18:02:02",notes="A tool for creating afx\nanimation files from gfx files",revision=798,title="Animation Editor",version="0.1"]]
 include "gui.lua"
+include "popup.lua"
+
+popup_open = false
 
 function _init()
   get_display()
@@ -138,6 +166,8 @@ end
 function _update()
 	gui:update_all()
 	
+	if popup_open then popup_gui:update_all() end
+	
 	if key("escape") then
 		stop()
 	end
@@ -146,25 +176,94 @@ end
 function _draw()
 	cls(theme"window_frame")
 	gui:draw_all()
+	
+	if popup_open then popup_gui:draw_all() end
   
 end
+:: popup.lua
+--[[pod_format="raw",created="2024-12-12 17:19:03",modified="2024-12-12 18:02:02",revision=151]]
+popup_gui = create_gui()
+
+close_hover_sprite = userdata("[gfx]08085500005555500555055555500055550000555500055555505550055555000055[/gfx]")
+close_sprite = userdata("[gfx]08082200002222200222022222200022220000222200022222202220022222000022[/gfx]")
+
+settings = {
+	height = 8,
+	width = 8
+}
+
+local Window = popup_gui:attach{
+	x = 50,
+	y = 5,
+	width = 300,
+	height = 250,
+	draw = function(self)
+		fillBG(self,6)
+	end
+}
+
+local closeButton = Window:attach{
+	x = 290,
+	y = 2,
+	width = 8,
+	height = 8,
+	hovered = 0,
+	draw = function(self)
+		if self.hovered > 0 then
+			spr(close_sprite)
+		else
+			spr(close_hover_sprite)
+		end
+	end,
+	hover = function(self)
+		self.hovered = 2
+	end,
+	click = function(self)
+		popup_open = false
+	end,
+	update = function(self)
+		if self.hovered > 0 then
+			self.hovered -= 1
+		end
+	end
+}
+
+for i = 1, 255 do
+	for h = 0, settings.height do
+		for w = 0, settings.width do
+			Window:attach{
+				x = w * 8,
+				y = h * 8,
+				width = 8,
+				height = 8,
+				draw = function(self)
+					spr(i)
+				end
+			}
+		end
+	end
+end
+
+function fillBG(self, col)
+	rectfill(0,0,self.width,self.height,col)
+end
 :: .info.pod
-b64$LS1bW3BvZCxtb2RpZmllZD0iMjAyNC0xMi0xMiAxNjoyNToyNSIsYXV0aG9yPSJBcnJhbmdl
-ZCBHb2RseSIsaWNvbj11c2VyZGF0YSgidTgiLDE2LDE2LCIwMDAwMDAwMDAwMDAwZDBkMGQwZDBk
-MGQwZDAwMDAwMDAwMGQwZDBkMGQwZDBkMDcwNzA3MDcwNzBkMDAwMDAwMDAwZDA3MDcwNzBkMGQw
-NzAxMDEwMTA3MGQwMDAwMDAwMDBkMDcwMTA3MGQwZDA3MDEwMTAxMDcwZDAwMDAwMDAwMGQwNzA3
-MDcwZDBkMDcwNzA3MDcwNzBkMDAwMDAwMGQwZDBkMDcwZDBkMGQwZDBkMDcwZDBkMGQwZDBkMGQw
-ZDA3MDcwNzA3MDcwNzA3MDcwNzA3MDcwZDBkMDcwZDBkMDcwNzA3MDcwNzA3MDcwNzA3MDcwNzBk
-MDcwNjBkMGQwNzA3MDcwMTAxMDEwNzAxMDEwMTA3MDcwNjA2MGQwZDA3MDcwNzAxMDcwMTA3MDEw
-NzA3MDcwNzA2MDYwZDBkMDcwNzA3MDEwMTAxMDcwMTAxMDcwNzA3MDYwNjBkMGQwNzA3MDcwMTA3
-MDEwNzAxMDcwNzA3MDcwNjA2MGQwZDBkMDcwNzAxMDcwMTA3MDEwMTAxMDcwNzA2MDYwZDAwMGQw
-ZDA3MDcwNzA3MDcwNzA3MDcwNzBkMDcwNjBkMDAwMDBkMGQwNzA3MDcwNzA3MDcwNzA3MGQwZDA3
-MGQwMDAwMDAwZDBkMGQwZDBkMGQwZDBkMGQwZDBkMGQwZCIpLGNyZWF0ZWQ9IjIwMjQtMTItMTEg
-MjA6NTY6MjMiLG5vdGVzPSJBIHRvb2wgZm9yIGNvbnZlcnRpbmcgZ2Z4XG5maWxlcyBpbnRvIGFm
+b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU2OjIzIixpY29uPXVzZXJkYXRhKCJ1
+OCIsMTYsMTYsIjAwMDAwMDAwMDAwMDBkMGQwZDBkMGQwZDBkMDAwMDAwMDAwZDBkMGQwZDBkMGQw
+NzA3MDcwNzA3MGQwMDAwMDAwMDBkMDcwNzA3MGQwZDA3MDEwMTAxMDcwZDAwMDAwMDAwMGQwNzAx
+MDcwZDBkMDcwMTAxMDEwNzBkMDAwMDAwMDAwZDA3MDcwNzBkMGQwNzA3MDcwNzA3MGQwMDAwMDAw
+ZDBkMGQwNzBkMGQwZDBkMGQwNzBkMGQwZDBkMGQwZDBkMDcwNzA3MDcwNzA3MDcwNzA3MDcwNzBk
+MGQwNzBkMGQwNzA3MDcwNzA3MDcwNzA3MDcwNzA3MGQwNzA2MGQwZDA3MDcwNzAxMDEwMTA3MDEw
+MTAxMDcwNzA2MDYwZDBkMDcwNzA3MDEwNzAxMDcwMTA3MDcwNzA3MDYwNjBkMGQwNzA3MDcwMTAx
+MDEwNzAxMDEwNzA3MDcwNjA2MGQwZDA3MDcwNzAxMDcwMTA3MDEwNzA3MDcwNzA2MDYwZDBkMGQw
+NzA3MDEwNzAxMDcwMTAxMDEwNzA3MDYwNjBkMDAwZDBkMDcwNzA3MDcwNzA3MDcwNzA3MGQwNzA2
+MGQwMDAwMGQwZDA3MDcwNzA3MDcwNzA3MDcwZDBkMDcwZDAwMDAwMDBkMGQwZDBkMGQwZDBkMGQw
+ZDBkMGQwZDBkIiksYXV0aG9yPSJBcnJhbmdlZCBHb2RseSIsbW9kaWZpZWQ9IjIwMjQtMTItMTIg
+MTg6MDI6MDIiLG5vdGVzPSJBIHRvb2wgZm9yIGNvbnZlcnRpbmcgZ2Z4XG5maWxlcyBpbnRvIGFm
 eCBhbmltYXRpb25zIixydW50aW1lPTEyLHRpdGxlPSJBbmltYXRpb24gRWRpdG9yIix2ZXJzaW9u
-PSIwLjEiLHdvcmtzcGFjZXM9e3tsb2NhdGlvbj0ibWFpbi5sdWEjMjQiLHdvcmtzcGFjZV9pbmRl
-eD0xfSx7bG9jYXRpb249Imd1aS5sdWEjNTgiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249
-ImdmeC8wLmdmeCIsd29ya3NwYWNlX2luZGV4PTJ9LHtsb2NhdGlvbj0ibWFwLzAubWFwIix3b3Jr
-c3BhY2VfaW5kZXg9M30se2xvY2F0aW9uPSJzZngvMC5zZngiLHdvcmtzcGFjZV9pbmRleD00fX1d
-XQ==
+PSIwLjEiLHdvcmtzcGFjZXM9e3tsb2NhdGlvbj0ibWFpbi5sdWEjMjEiLHdvcmtzcGFjZV9pbmRl
+eD0xfSx7bG9jYXRpb249Imd1aS5sdWEjNTAiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249
+InBvcHVwLmx1YSM2MSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iZ2Z4LzAuZ2Z4Iix3
+b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJtYXAvMC5tYXAiLHdvcmtzcGFjZV9pbmRleD0z
+fSx7bG9jYXRpb249InNmeC8wLnNmeCIsd29ya3NwYWNlX2luZGV4PTR9fV1d
 :: [eoc]
