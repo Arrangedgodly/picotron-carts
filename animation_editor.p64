@@ -4,11 +4,11 @@ version 2
 :: afx/
 :: afx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTEyIDA2OjU4OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxODowMjowMiJdXQ==
+Mi0xMiAyMDoxMjoyNSJdXQ==
 :: gfx/
 :: gfx/0.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxODowMjowMiIscmV2aXNpb249NjU2XV1sejQAYgIAAM4yAADzIXtbMF09e2JtcD1weHUA
+Mi0xMiAyMDoxMjoyNSIscmV2aXNpb249NzM4XV1sejQAXQIAAM4yAADzIXtbMF09e2JtcD1weHUA
 QyAQEATwVgcQB8AX0BfABxAH8FYsZmxhZ3M9MCxwYW5feAgAy3k9MCx6b29tPTh9LD4A-xkDBtAW
 0AYQJpBWkBYQBqAGIAYwRkBmAAZgFkAWYAZAFsAWwBbQBvAmWAAd8AYXJwAXYIdQRyAXUBcwJ7AX
 0DfgB8AIAH8nwCfgB-AVUAAd-woWXxaALrAe0A7gXqBOgC6QPrBu0D6gTuAuSwAf-yMUNbAFQCVg
@@ -18,30 +18,30 @@ dQAe8A9vD3Ae0B4QPoAOAB4QHnAOAA4gHoAuAC5QfgAOME5tAOAwDhAOIA4QHjAeAA4gDpkAAAYA
 b3B_kF7wFG8AGfIOICAE8CQPEvAOHvANLvANDhAO0F5wDhAO8AQOUB4HAPAQDjAO8AKOIB7wAC4g
 XhAO4C4gLjA_0B4gLjBOwC4ATpAAcJAuAC4ADlDxAPAATiAOMD4gPqAOMA4gTgBeCACQEC4AbgAO
 sA4grABATiAesBwA-yZeIB7ADjA_EC4wDtBOAA4APjAu8AFOMD4ADvACDgC_8AIOMD4AHvAFTjBe
-8AMOoB7wDw7wk0kBHR-wMQALHzkxAB0fNDEA----------------------------------------
-----------------------8vUG09NH19
+8AMOoB7wDw7wk0kBHR-wMQALHzkxAP----------------------------------------------
+----------------YFBtPTl9fQ==
 :: gfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxODowMjowMiJdXQ==
+Mi0xMiAyMDoxMjoyNSJdXQ==
 :: map/
 :: map/0.map
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxODowMjowMiIscmV2aXNpb249NjIzXV1sejQAaAAAAFgQAADwCHt7Ym1wPXVzZXJkYXRh
+Mi0xMiAyMDoxMjoyNSIscmV2aXNpb249NzAwXV1sejQAaAAAAFgQAADwCHt7Ym1wPXVzZXJkYXRh
 KCJpMTYiLDMyAwAvIjABAP--------------------vxCCIpLGhpZGRlbj1mYWxzZSxwYW5feD0w
 CADSeT0wLHRpbGVfaD0xNgoAEHcKAIB6b29tPTF9fQ==
 :: map/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxODowMjowMiJdXQ==
+Mi0xMiAyMDoxMjoyNSJdXQ==
 :: sfx/
 :: sfx/0.sfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxODowMjowMSIscmV2aXNpb249NjEyXV1sejQAoAAAAAsKAAD-MHB4dQADKAAABAAED0AQ
+Mi0xMiAyMDoxMjoyNSIscmV2aXNpb249Njg5XV1sejQAoAAAAAsKAAD-MHB4dQADKAAABAAED0AQ
 Ag4AAaABIAKgDgAPEAAN8MoBAgNADw_QBAUGB0AMkAgJCgtADJAPDA8NDw4MQAzw-wEA6-8nqgEQ
 Bg8gEAEgASAB8AACEAIOEAEgDyEgATAPQPDDDygP--DGD-gKD-8PgA-3Dw0B8AkBEAYOMAD-----
 -70f-wEArM-ID0AADxBA--_w8P8BAP-qUP----8p
 :: sfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxODowMjowMiJdXQ==
+Mi0xMiAyMDoxMjoyNSJdXQ==
 :: vgfx/
 :: vgfx/0.vgfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU3OjMwIixtb2RpZmllZD0iMjAyNC0x
@@ -51,9 +51,9 @@ CQDzDjAsNDB9fSxzaG93PXRydWUsdHlwZT0iZWFyIn0saAATOGgAEjJnAE8zNzc0ZwALFS1oAD8x
 MyxmAApQciJ9fX0=
 :: vgfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU3OjMwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMiAxODowMjowMiJdXQ==
+Mi0xMiAyMDoxMjoyNSJdXQ==
 :: gui.lua
---[[pod_format="raw",created="2024-12-11 21:26:33",modified="2024-12-12 18:02:02",revision=726]]
+--[[pod_format="raw",created="2024-12-11 21:26:33",modified="2024-12-12 20:12:25",revision=806]]
 gui = create_gui()
 
 local colors = {
@@ -139,7 +139,7 @@ local saveBtn = menuBar:attach{
 	end
 }	
 :: main.lua
---[[pod_format="raw",author="Arranged Godly",created="2024-12-11 20:55:39",modified="2024-12-12 18:02:02",notes="A tool for creating afx\nanimation files from gfx files",revision=798,title="Animation Editor",version="0.1"]]
+--[[pod_format="raw",author="Arranged Godly",created="2024-12-11 20:55:39",modified="2024-12-12 20:12:25",notes="A tool for creating afx\nanimation files from gfx files",revision=876,title="Animation Editor",version="0.1"]]
 include "gui.lua"
 include "popup.lua"
 
@@ -181,7 +181,7 @@ function _draw()
   
 end
 :: popup.lua
---[[pod_format="raw",created="2024-12-12 17:19:03",modified="2024-12-12 18:02:02",revision=151]]
+--[[pod_format="raw",created="2024-12-12 17:19:03",modified="2024-12-12 20:12:25",revision=267]]
 popup_gui = create_gui()
 
 close_hover_sprite = userdata("[gfx]08085500005555500555055555500055550000555500055555505550055555000055[/gfx]")
@@ -191,6 +191,8 @@ settings = {
 	height = 8,
 	width = 8
 }
+
+frame = 1
 
 local Window = popup_gui:attach{
 	x = 50,
@@ -228,19 +230,19 @@ local closeButton = Window:attach{
 	end
 }
 
-for i = 1, 255 do
-	for h = 0, settings.height do
-		for w = 0, settings.width do
-			Window:attach{
-				x = w * 8,
-				y = h * 8,
-				width = 8,
-				height = 8,
-				draw = function(self)
-					spr(i)
-				end
-			}
-		end
+for h = 1, settings.height do
+	for w = 1, settings.width do
+		Window:attach{
+			x = w * 16,
+			y = h * 16,
+			width = 16,
+			height = 16,
+			sprite_num = frame,
+			draw = function(self)
+				sspr(self.sprite_num, 0, 0, 8, 8, 0, 0, 16, 16)
+			end
+		}
+		frame += 1
 	end
 end
 
@@ -248,22 +250,22 @@ function fillBG(self, col)
 	rectfill(0,0,self.width,self.height,col)
 end
 :: .info.pod
-b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU2OjIzIixpY29uPXVzZXJkYXRhKCJ1
-OCIsMTYsMTYsIjAwMDAwMDAwMDAwMDBkMGQwZDBkMGQwZDBkMDAwMDAwMDAwZDBkMGQwZDBkMGQw
-NzA3MDcwNzA3MGQwMDAwMDAwMDBkMDcwNzA3MGQwZDA3MDEwMTAxMDcwZDAwMDAwMDAwMGQwNzAx
-MDcwZDBkMDcwMTAxMDEwNzBkMDAwMDAwMDAwZDA3MDcwNzBkMGQwNzA3MDcwNzA3MGQwMDAwMDAw
-ZDBkMGQwNzBkMGQwZDBkMGQwNzBkMGQwZDBkMGQwZDBkMDcwNzA3MDcwNzA3MDcwNzA3MDcwNzBk
-MGQwNzBkMGQwNzA3MDcwNzA3MDcwNzA3MDcwNzA3MGQwNzA2MGQwZDA3MDcwNzAxMDEwMTA3MDEw
-MTAxMDcwNzA2MDYwZDBkMDcwNzA3MDEwNzAxMDcwMTA3MDcwNzA3MDYwNjBkMGQwNzA3MDcwMTAx
-MDEwNzAxMDEwNzA3MDcwNjA2MGQwZDA3MDcwNzAxMDcwMTA3MDEwNzA3MDcwNzA2MDYwZDBkMGQw
-NzA3MDEwNzAxMDcwMTAxMDEwNzA3MDYwNjBkMDAwZDBkMDcwNzA3MDcwNzA3MDcwNzA3MGQwNzA2
-MGQwMDAwMGQwZDA3MDcwNzA3MDcwNzA3MDcwZDBkMDcwZDAwMDAwMDBkMGQwZDBkMGQwZDBkMGQw
-ZDBkMGQwZDBkIiksYXV0aG9yPSJBcnJhbmdlZCBHb2RseSIsbW9kaWZpZWQ9IjIwMjQtMTItMTIg
-MTg6MDI6MDIiLG5vdGVzPSJBIHRvb2wgZm9yIGNvbnZlcnRpbmcgZ2Z4XG5maWxlcyBpbnRvIGFm
-eCBhbmltYXRpb25zIixydW50aW1lPTEyLHRpdGxlPSJBbmltYXRpb24gRWRpdG9yIix2ZXJzaW9u
-PSIwLjEiLHdvcmtzcGFjZXM9e3tsb2NhdGlvbj0ibWFpbi5sdWEjMjEiLHdvcmtzcGFjZV9pbmRl
+b64$LS1bW3BvZCx2ZXJzaW9uPSIwLjEiLG1vZGlmaWVkPSIyMDI0LTEyLTEyIDIwOjEyOjI1Iixu
+b3Rlcz0iQSB0b29sIGZvciBjb252ZXJ0aW5nIGdmeFxuZmlsZXMgaW50byBhZnggYW5pbWF0aW9u
+cyIsaWNvbj11c2VyZGF0YSgidTgiLDE2LDE2LCIwMDAwMDAwMDAwMDAwZDBkMGQwZDBkMGQwZDAw
+MDAwMDAwMGQwZDBkMGQwZDBkMDcwNzA3MDcwNzBkMDAwMDAwMDAwZDA3MDcwNzBkMGQwNzAxMDEw
+MTA3MGQwMDAwMDAwMDBkMDcwMTA3MGQwZDA3MDEwMTAxMDcwZDAwMDAwMDAwMGQwNzA3MDcwZDBk
+MDcwNzA3MDcwNzBkMDAwMDAwMGQwZDBkMDcwZDBkMGQwZDBkMDcwZDBkMGQwZDBkMGQwZDA3MDcw
+NzA3MDcwNzA3MDcwNzA3MDcwZDBkMDcwZDBkMDcwNzA3MDcwNzA3MDcwNzA3MDcwNzBkMDcwNjBk
+MGQwNzA3MDcwMTAxMDEwNzAxMDEwMTA3MDcwNjA2MGQwZDA3MDcwNzAxMDcwMTA3MDEwNzA3MDcw
+NzA2MDYwZDBkMDcwNzA3MDEwMTAxMDcwMTAxMDcwNzA3MDYwNjBkMGQwNzA3MDcwMTA3MDEwNzAx
+MDcwNzA3MDcwNjA2MGQwZDBkMDcwNzAxMDcwMTA3MDEwMTAxMDcwNzA2MDYwZDAwMGQwZDA3MDcw
+NzA3MDcwNzA3MDcwNzBkMDcwNjBkMDAwMDBkMGQwNzA3MDcwNzA3MDcwNzA3MGQwZDA3MGQwMDAw
+MDAwZDBkMGQwZDBkMGQwZDBkMGQwZDBkMGQwZCIpLGF1dGhvcj0iQXJyYW5nZWQgR29kbHkiLHRp
+dGxlPSJBbmltYXRpb24gRWRpdG9yIixjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU2OjIzIixydW50
+aW1lPTEyLHdvcmtzcGFjZXM9e3tsb2NhdGlvbj0ibWFpbi5sdWEjMjEiLHdvcmtzcGFjZV9pbmRl
 eD0xfSx7bG9jYXRpb249Imd1aS5sdWEjNTAiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249
-InBvcHVwLmx1YSM2MSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iZ2Z4LzAuZ2Z4Iix3
+InBvcHVwLmx1YSM0OCIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iZ2Z4LzAuZ2Z4Iix3
 b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJtYXAvMC5tYXAiLHdvcmtzcGFjZV9pbmRleD0z
 fSx7bG9jYXRpb249InNmeC8wLnNmeCIsd29ya3NwYWNlX2luZGV4PTR9fV1d
 :: [eoc]
