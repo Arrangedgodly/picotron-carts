@@ -4,11 +4,11 @@ version 2
 :: afx/
 :: afx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTEyIDA2OjU4OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMyAwNzoyNzoyMiJdXQ==
+Mi0xMyAwOToxOTozNCJdXQ==
 :: gfx/
 :: gfx/0.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMyAwNzoyNzoyMiIscmV2aXNpb249MTE5N11dbHo0AGECAADOMgAA8yF7WzBdPXtibXA9cHh1
+Mi0xMyAwOToxOTozNCIscmV2aXNpb249MTM5Nl1dbHo0AGECAADOMgAA8yF7WzBdPXtibXA9cHh1
 AEMgEBAE8FYHEAfAF9AXwAcQB-BWLGZsYWdzPTAscGFuX3gIAMt5PTAsem9vbT04fSw_AP8ZAwbQ
 FtAGECaQVpAWEAagBiAGMEZAZgAGYBZAFmAGQBbAFsAW0AbwJlgAHfAGFycAF2CHUEcgF1AXMCew
 F9A34AfACAB-J8An4AfwFVAAHf8KFl8WgC6wHtAO4F6gToAukD6wbtA_oE7gLksAH-8jFDWwBUAl
@@ -38,45 +38,50 @@ CABET0AmMCaaAB8f8DEA--------------------------------------------------------
 -----4lQbT04fX0=
 :: gfx/ui.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTEzIDAyOjA4OjU4Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMyAwNzoyNzoyMiIscmV2aXNpb249MzcwXV1sejQAbAMAAMQ1AADzIXtbMF09e2JtcD1weHUA
-QyAQEATwVgcQB8AX0BfABxAH8FYsZmxhZ3M9MCxwYW5feAgAynk9MCx6b29tPTV9LD4A8QDBIAEv
+Mi0xMyAwOToxOTozNCIscmV2aXNpb249NTc5XV1sejQApAQAAOQ2AADzIXtbMF09e2JtcD1weHUA
+QyAQEATwVgcQB8AX0BfABxAH8FYsZmxhZ3M9MCxwYW5feAgAynk9MCx6b29tPTd9LD4A8QDBIAEv
 EAEmEQYBDgEQAS4KADMeAQAKAFAuES4BVgYA9gBxLhHeEd4RHpEeER4BdwEGAD8XMRcOAAMv8QGK
 ABzxAMwgDC8cDCYcBgwODBAMLgoAMx4MAAoAUC4cLgxWBgD2AHwuHN4c3hwenB4cHgx3DAYAPxc8
-Fw4AAx-8igAd9QL-IAHWHtYe1v4BAA4mB3YOEAYAgA4WDjYOIA4WCQA-Jg4wCQAIIB4GCQBHFg5Q
-DgkAX1YOYH4wjQAdYhcB3xgfFwQA0-8XAQAOLxgIfQ4QDi0GAIAOHQ49DiAOHQkAPy0OMAkACCAe
-DQkARx0OUA4JAB9dlAAg8RIwh1AHhgcwB6YHMAeWB0BnJgcwB1AHJgcgBwYHQAcmBxAMAFNGF0YH
-IA4AMUAHBgwAk1AHMAcmZ0AHlj4AT4YHUId_AB7xEYZQBocGMAanBjAGlwZAZicGMAZQBicGIAYH
-BkAGJwYQDABTRxZHBiAOADFABgcMAJNQBjAGJ2ZABpc_AE_HBlCGfgAd8BA3sAcmF5AHRhdwB2YX
-UAeGFzAHphcQB8YHAAfWF9YXCAAAEAAAGAAAIAAAKABfJheQN7BnABzwEDawBicWkAZHFnAGZxZQ
-BocWMAanFhAGxwYABtcW1xYIAAAQAAAYAAAgAAAoAE8nFpA2ZwAdj-ACtyAHtgcQBAAYTyC38AJm
-AB5vtiAGtwYQBAAYLyC2ZgAfRAMnMCd-Ah8wCABEb0AnMCfwA5oAHjQmMCabAh8wCABET0AmMCaa
-AB7-AJA0oFQQBMoQBA8ZuRAEDgQAEz-U8AFnACHq1BDUECS6ACQPGakAJA4EAIAUDrkAFA6pEAQA
-AGMALw65-wEfgxYmQAZQBhcWCAQhFhAIAOI3FgAGBwYARkcmBxanFgQAIJcmEgACGgAGKgACOgBv
-UCZABvARfAAecydAB1AHFhcCBSEXEAgA4jYXAAcGBwBHRicGF6YXBAAglicSAAIaAAYqAAI6AE9Q
-J0AHfAAfH-AxAP-----------------------------------------------------------8RQ
-bT01fX0=
+Fw4AAx-8igAd8QD-IAHWHtYe1v4BAA62DhAEAP8ANg4WDjYOIA4mDhYOJg4wCAAFMB4WDgIAJFAO
+CABfdg5gfjCAAB1iFwHfGB8XBAD-Dv8XAQAOvxgOEA69DhAOPQ4dDj0OIA4tDh0OLQ4wCAAFMB4d
+DgIAJFAOCAAffYcAIPESMIdQB4YHMAemBzAHlgdAZyYHMAdQByYHIAcGB0AHJgcQDABTRhdGByAO
+ADFABwYMAJNQBzAHJmdAB5Y_AE_GB1CHfgAe8RGGUAaHBjAGpwYwBpcGQGYnBjAGUAYnBiAGBwZA
+BicGEAwAU0cWRwYgDgAxQAYHDACTUAYwBidmQAaXPgBPhwZQhn4AHfAQN7AHJheQB0YXcAdmF1AH
+hhcwB6YXEAfGBwAH1hfWFwgAABAAABgAACAAACgAXyYXkDewZwAc8BA2sAYnFpAGRxZwBmcWUAaH
+FjAGpxYQBscGAAbXFtcWCAAAEAAAGAAAIAAAKABPJxaQNmcAHY-wArcgB7YHEAQAGE8gt-ACZgAe
+b7YgBrcGEAQAGC8gtmYAH0QDJzAnfwIfMAgARG9AJzAn8AOaAB40JjAmmwIfMAgARE9AJjAmmgAe
+-wCQNKBUEATKEAQPGbkQBA4EABM-1PABZwAh6tQQ1BAkugAkDxmpACQOBACAFA65ABQOqRAEAABj
+AC8Ouf8BH4MWJkAGUAYXFggEIRYQCADiNxYABgcGAEZHJgcWpxYEACCXJhIAAhoABioAAjoAb1Am
+QAbwEXwAHnMnQAdQBxYXAgUhFxAIAOI2FwAHBgcAR0YnBhemFwQAIJYnEgACGgAGKgACOgBPUCdA
+B3wAHvEkPxhwThgeUB4YHigeMB4oLigeEB4oHgAeKD4oHiAeKB4oHkAeWB5gHjgecB44HmAeWB5A
+FgARICIAIQAeMAARLjwAER5IAD9OcD6DABzxJDhwSB8YGFAYHhguGDAYLiguGBAYLhgAGC44Lhgg
+GC4YLhhAGF4YYBg_GHAYPhhgGF4YQBYAESAiACEAGDAAESg8ACAYHkgAP0hwOIMAHPIhwCOwEwsD
+sAMbA6ATGwOgAysDkBMrA5ADK1NAEysDAAMbEzADKxMAAysTEBMrAxATDABgIBMrIysDIgDfKxNQ
+E1sDcBM7E4BTQHwAHfIgK7AbAwuwCxMLoBsTC6ALIwuQGyMLkAsjW0AbIwsACxMbMAsjGwALIxsQ
+GyMLEBsMAGAgGyMrIwsiAM8jG1AbUwtwGzMbgFt8AB0v8PAxAP--------------------------
+---------------------------------wBQbT03fX0=
 :: gfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMyAwNzoyNzoyMiJdXQ==
+Mi0xMyAwOToxOTozNCJdXQ==
 :: map/
 :: map/0.map
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMyAwNzoyNzoyMiIscmV2aXNpb249MTE1NF1dbHo0AGgAAABYEAAA8Ah7e2JtcD11c2VyZGF0
+Mi0xMyAwOToxOTozNCIscmV2aXNpb249MTM1M11dbHo0AGgAAABYEAAA8Ah7e2JtcD11c2VyZGF0
 YSgiaTE2IiwzMgMALyIwAQD--------------------78QgiKSxoaWRkZW49ZmFsc2UscGFuX3g9
 MAgA0nk9MCx0aWxlX2g9MTYKABB3CgCAem9vbT0xfX0=
 :: map/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMyAwNzoyNzoyMiJdXQ==
+Mi0xMyAwOToxOTozNCJdXQ==
 :: sfx/
 :: sfx/0.sfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xMyAwNzoyNzoyMiIscmV2aXNpb249MTE0MV1dbHo0AKAAAAALCgAA-zBweHUAAygAAAQABA9A
+Mi0xMyAwOToxOTozNCIscmV2aXNpb249MTM0MF1dbHo0AKAAAAALCgAA-zBweHUAAygAAAQABA9A
 EAIOAAGgASACoA4ADxAADfDKAQIDQA8PkAQFBgdADJAICQoLQAyQDwwPDQ8ODEAM8P8BAOv-J6oB
 EAYPIBABIAEgAfAAAhACDhABIA8hIAEwD0Dwww8oD--wxg-4Cg--D4AP9w8NAfAJARAGDjAA----
 --_9H-8BAKzPyA9AAA8QQP--sPD-AQD-6lD-----KQ==
 :: sfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMyAwNzoyNzoyMiJdXQ==
+Mi0xMyAwOToxOTozNCJdXQ==
 :: vgfx/
 :: vgfx/0.vgfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU3OjMwIixtb2RpZmllZD0iMjAyNC0x
@@ -86,9 +91,9 @@ CQDzDjAsNDB9fSxzaG93PXRydWUsdHlwZT0iZWFyIn0saAATOGgAEjJnAE8zNzc0ZwALFS1oAD8x
 MyxmAApQciJ9fX0=
 :: vgfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU3OjMwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xMyAwNzoyNzoyMiJdXQ==
+Mi0xMyAwOToxOTozNCJdXQ==
 :: button.lua
---[[pod_format="raw",created="2024-12-13 05:48:40",modified="2024-12-13 07:27:22",revision=151]]
+--[[pod_format="raw",created="2024-12-13 05:48:40",modified="2024-12-13 09:19:34",revision=355]]
 -- Create a hoverable button with consistent behavior and optional active state
 function create_hover_button(parent, config)
     -- Default configuration
@@ -184,7 +189,7 @@ function create_button_group(parent, config)
     }
 end
 :: gui.lua
---[[pod_format="raw",created="2024-12-11 21:26:33",modified="2024-12-13 07:27:22",revision=1417]]
+--[[pod_format="raw",created="2024-12-11 21:26:33",modified="2024-12-13 09:19:34",revision=1651]]
 gui = create_gui()
 
 include("button.lua")
@@ -199,9 +204,9 @@ local colors = {
 }
 
 local menuBar = gui:attach{
-    x=330,
+    x=320,
     y=0,
-    width = 150,
+    width = 160,
     height = 270,
     draw = function(self)
         rectfill(0,0,self.width,self.height,colors.menu_background)
@@ -209,20 +214,20 @@ local menuBar = gui:attach{
 }
 
 local text_bar = menuBar:attach_text_editor{
-    x = 5,
-    y = 20,
-    width = 140,
+    x = 8,
+    y = 32,
+    width = menuBar.width - 16,
     height = 15,
     block_scrolling = true
 }
 
 local controls = create_button_group(menuBar, {
-    x = 5,
-    y = 2
+    x = 8,
+    y = 8
 })
 
 local loadButton = create_hover_button(controls, {
-    x = 30,
+    x = 32,
     normal_sprite = ui[13].bmp,
     hover_sprite = ui[14].bmp,
     onclick = function()
@@ -231,24 +236,24 @@ local loadButton = create_hover_button(controls, {
 })
 
 local saveButton = create_hover_button(controls, {
-    x = 60,
+    x = 64,
     normal_sprite = ui[1].bmp,
     hover_sprite = ui[2].bmp
 })
 
 local deleteButton = create_hover_button(controls, {
-    x = 90,
+    x = 96,
     normal_sprite = ui[3].bmp,
     hover_sprite = ui[4].bmp
 })
 
 local playback = create_button_group(menuBar, {
     x = 5,
-    y = 40
+    y = 54
 })
 
 local playButton = create_hover_button(playback, {
-    x = 40,
+    x = 48,
     normal_sprite = ui[8].bmp,
     hover_sprite = ui[7].bmp,
     active_sprite = ui[12].bmp,
@@ -263,7 +268,7 @@ local playButton = create_hover_button(playback, {
 })
 
 local loopButton = create_hover_button(playback, {
-    x = 80,
+    x = 96,
     normal_sprite = ui[6].bmp,
     hover_sprite = ui[5].bmp,
     active_sprite = ui[15].bmp,
@@ -313,7 +318,7 @@ gEADCDQAAg0g0AAINIBAAyDQAAg0gEADINAAAg2AQAMg0AACDYBAAwg0AAININAACDQAAg0g0AAI
 NIBAAyDQAAg0gEADINAAAg2AQAMg0AACDYBAAwg0AAININAACDQAAg2wev4D6kxi5-vMUHcAAAAQ
 dEVYdExvZGVQTkcAMjAxMTAyMjHjWbbBAAAAAElFTkSuQmCC
 :: main.lua
---[[pod_format="raw",author="Arranged Godly",created="2024-12-11 20:55:39",modified="2024-12-13 07:27:22",notes="A tool for creating afx\nanimation files from gfx files",revision=1336,title="Animation Editor",version="0.1"]]
+--[[pod_format="raw",author="Arranged Godly",created="2024-12-11 20:55:39",modified="2024-12-13 09:19:34",notes="A tool for creating afx\nanimation files from gfx files",revision=1548,title="Animation Editor",version="0.1"]]
 include "gui.lua"
 include "popup.lua"
 
@@ -355,11 +360,12 @@ function _draw()
   
 end
 :: popup.lua
---[[pod_format="raw",created="2024-12-12 17:19:03",modified="2024-12-13 07:27:22",revision=830]]
+--[[pod_format="raw",created="2024-12-12 17:19:03",modified="2024-12-13 09:19:34",revision=1091]]
 popup_gui = create_gui()
 
-close_hover_sprite = userdata("[gfx]08085500005555500555055555500055550000555500055555505550055555000055[/gfx]")
-close_sprite = userdata("[gfx]08082200002222200222022222200022220000222200022222202220022222000022[/gfx]")
+local ui = fetch("./gfx/ui.gfx")
+close_hover_sprite = ui[18].bmp
+close_sprite = ui[17].bmp
 
 settings = {
 	height = 8,
@@ -368,9 +374,10 @@ settings = {
 
 frame = 1
 local isDragging = false
+selected_frames = {}
 
 local Window = popup_gui:attach{
-	x = 50,
+	x = 32,
 	y = 5,
 	width = 256,
 	height = 250,
@@ -389,8 +396,8 @@ local Window = popup_gui:attach{
 local closeButton = popup_gui:attach{
 	x = 310,
 	y = 2,
-	width = 8,
-	height = 8,
+	width = 16,
+	height = 16,
 	hovered = 0,
 	draw = function(self)
 		if self.hovered > 0 then
@@ -404,6 +411,7 @@ local closeButton = popup_gui:attach{
 	end,
 	click = function(self)
 		popup_open = false
+		reset_popup()
 	end,
 	update = function(self)
 		if self.hovered > 0 then
@@ -420,23 +428,39 @@ for h = 0, settings.height - 1 do
 			width = 32,
 			height = 32,
 			selected = false,
+			frame_num = 0,
 			hovered = 0,
 			sprite_num = frame,
 			draw = function(self)
 				rectfill(0, 0, self.width, self.height, 0)
 				sspr(self.sprite_num, 0, 0, 16, 16, 0, 0, 32, 32)
+				
 				if self.selected then
     				rect(0, 0, self.width-1, self.height-1, 7)
 				end	
+				
+				if self.frame_num > 0 then
+					print(self.frame_num, 2, 2, 7)
+				end
 			end,
 			hover = function(self)
 				self.hovered = 2
 			end,
 			update = function(self)
+				if check_frames(self.sprite_num) > 0 and self.frame_num == 0 then
+					self.frame_num = check_frames(self.sprite_num)
+				end
+				
 				if self.hovered > 0 then
 					self.hovered -= 1
 					if Window.isDragging then
 						self.selected = not self.selected
+						if self.selected then
+							table.insert(selected_frames, self.sprite_num)
+						else
+							table.remove(selected_frames)
+							self.frame_num = 0
+						end
 					end
 				end
 			end
@@ -448,25 +472,49 @@ end
 function fillBG(self, col)
 	rectfill(0,0,self.width,self.height,col)
 end
+
+function check_frames(frame_num)
+	for i = 1, #selected_frames do
+		if selected_frames[i] == frame_num then
+			return i
+		end
+	end
+	
+	return 0
+end
+
+function reset_popup()
+    selected_frames = {}
+    frame = 1
+    
+    for child in all(Window.children) do
+        if child.selected ~= nil then
+            child.selected = false
+            child.frame_num = 0
+        end
+    end
+    
+    Window.isDragging = false
+end
 :: .info.pod
-b64$LS1bW3BvZCxhdXRob3I9IkFycmFuZ2VkIEdvZGx5IixpY29uPXVzZXJkYXRhKCJ1OCIsMTYs
-MTYsIjAwMDAwMDAwMDAwMDBkMGQwZDBkMGQwZDBkMDAwMDAwMDAwZDBkMGQwZDBkMGQwNzA3MDcw
-NzA3MGQwMDAwMDAwMDBkMDcwNzA3MGQwZDA3MDEwMTAxMDcwZDAwMDAwMDAwMGQwNzAxMDcwZDBk
-MDcwMTAxMDEwNzBkMDAwMDAwMDAwZDA3MDcwNzBkMGQwNzA3MDcwNzA3MGQwMDAwMDAwZDBkMGQw
-NzBkMGQwZDBkMGQwNzBkMGQwZDBkMGQwZDBkMDcwNzA3MDcwNzA3MDcwNzA3MDcwNzBkMGQwNzBk
-MGQwNzA3MDcwNzA3MDcwNzA3MDcwNzA3MGQwNzA2MGQwZDA3MDcwNzAxMDEwMTA3MDEwMTAxMDcw
-NzA2MDYwZDBkMDcwNzA3MDEwNzAxMDcwMTA3MDcwNzA3MDYwNjBkMGQwNzA3MDcwMTAxMDEwNzAx
-MDEwNzA3MDcwNjA2MGQwZDA3MDcwNzAxMDcwMTA3MDEwNzA3MDcwNzA2MDYwZDBkMGQwNzA3MDEw
-NzAxMDcwMTAxMDEwNzA3MDYwNjBkMDAwZDBkMDcwNzA3MDcwNzA3MDcwNzA3MGQwNzA2MGQwMDAw
-MGQwZDA3MDcwNzA3MDcwNzA3MDcwZDBkMDcwZDAwMDAwMDBkMGQwZDBkMGQwZDBkMGQwZDBkMGQw
-ZDBkIiksY3JlYXRlZD0iMjAyNC0xMi0xMSAyMDo1NjoyMyIsbW9kaWZpZWQ9IjIwMjQtMTItMTMg
-MDc6Mjc6MjIiLG5vdGVzPSJBIHRvb2wgZm9yIGNvbnZlcnRpbmcgZ2Z4XG5maWxlcyBpbnRvIGFm
-eCBhbmltYXRpb25zIixydW50aW1lPTEyLHRpdGxlPSJBbmltYXRpb24gRWRpdG9yIix2ZXJzaW9u
-PSIwLjEiLHdvcmtzcGFjZXM9e3tsb2NhdGlvbj0ibWFpbi5sdWEjMjEiLHdvcmtzcGFjZV9pbmRl
-eD0xfSx7bG9jYXRpb249Imd1aS5sdWEjNzgiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249
-InBvcHVwLmx1YSM4NSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iYnV0dG9uLmx1YSM5
-NCIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iZ2Z4LzAuZ2Z4Iix3b3Jrc3BhY2VfaW5k
-ZXg9Mn0se2xvY2F0aW9uPSJnZngvdWkuZ2Z4Iix3b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9u
-PSJtYXAvMC5tYXAiLHdvcmtzcGFjZV9pbmRleD0zfSx7bG9jYXRpb249InNmeC8wLnNmeCIsd29y
-a3NwYWNlX2luZGV4PTR9fV1d
+b64$LS1bW3BvZCxydW50aW1lPTEyLGF1dGhvcj0iQXJyYW5nZWQgR29kbHkiLGljb249dXNlcmRh
+dGEoInU4IiwxNiwxNiwiMDAwMDAwMDAwMDAwMGQwZDBkMGQwZDBkMGQwMDAwMDAwMDBkMGQwZDBk
+MGQwZDA3MDcwNzA3MDcwZDAwMDAwMDAwMGQwNzA3MDcwZDBkMDcwMTAxMDEwNzBkMDAwMDAwMDAw
+ZDA3MDEwNzBkMGQwNzAxMDEwMTA3MGQwMDAwMDAwMDBkMDcwNzA3MGQwZDA3MDcwNzA3MDcwZDAw
+MDAwMDBkMGQwZDA3MGQwZDBkMGQwZDA3MGQwZDBkMGQwZDBkMGQwNzA3MDcwNzA3MDcwNzA3MDcw
+NzA3MGQwZDA3MGQwZDA3MDcwNzA3MDcwNzA3MDcwNzA3MDcwZDA3MDYwZDBkMDcwNzA3MDEwMTAx
+MDcwMTAxMDEwNzA3MDYwNjBkMGQwNzA3MDcwMTA3MDEwNzAxMDcwNzA3MDcwNjA2MGQwZDA3MDcw
+NzAxMDEwMTA3MDEwMTA3MDcwNzA2MDYwZDBkMDcwNzA3MDEwNzAxMDcwMTA3MDcwNzA3MDYwNjBk
+MGQwZDA3MDcwMTA3MDEwNzAxMDEwMTA3MDcwNjA2MGQwMDBkMGQwNzA3MDcwNzA3MDcwNzA3MDcw
+ZDA3MDYwZDAwMDAwZDBkMDcwNzA3MDcwNzA3MDcwNzBkMGQwNzBkMDAwMDAwMGQwZDBkMGQwZDBk
+MGQwZDBkMGQwZDBkMGQiKSxub3Rlcz0iQSB0b29sIGZvciBjb252ZXJ0aW5nIGdmeFxuZmlsZXMg
+aW50byBhZnggYW5pbWF0aW9ucyIsY3JlYXRlZD0iMjAyNC0xMi0xMSAyMDo1NjoyMyIsbW9kaWZp
+ZWQ9IjIwMjQtMTItMTMgMDk6MTk6MzQiLHRpdGxlPSJBbmltYXRpb24gRWRpdG9yIix2ZXJzaW9u
+PSIwLjEiLHdvcmtzcGFjZXM9e3tsb2NhdGlvbj0ibWFpbi5sdWEjNDAiLHdvcmtzcGFjZV9pbmRl
+eD0xfSx7bG9jYXRpb249Imd1aS5sdWEjMTUiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249
+InBvcHVwLmx1YSMxMjMiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImJ1dHRvbi5sdWEj
+NzgiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImdmeC8wLmdmeCIsd29ya3NwYWNlX2lu
+ZGV4PTJ9LHtsb2NhdGlvbj0iZ2Z4L3VpLmdmeCIsd29ya3NwYWNlX2luZGV4PTJ9LHtsb2NhdGlv
+bj0ibWFwLzAubWFwIix3b3Jrc3BhY2VfaW5kZXg9M30se2xvY2F0aW9uPSJzZngvMC5zZngiLHdv
+cmtzcGFjZV9pbmRleD00fX1dXQ==
 :: [eoc]
