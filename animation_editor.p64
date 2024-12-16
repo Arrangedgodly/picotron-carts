@@ -4,16 +4,15 @@ version 2
 :: afx/
 :: afx/0.afx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTE1IDE2OjE2OjUxIixtb2RpZmllZD0iMjAyNC0x
-Mi0xNSAxNjoxNjo1NyIscmV2aXNpb249MV1dbHo0AEwAAABuAAAA8Qx7YW5pbWF0aW9ucz17e2Zy
-YW1lcmF0ZT0xMiwNAP8Ncz17Niw3fSxsb29wPWZhbHNlLG5hbWU9IiJ9LC8ABT40LDMxAFAiIn19
-fQ==
+Mi0xNSAyMTozNDowNyIscmV2aXNpb249N11dbHo0AEgAAABHAAAA8Qx7YW5pbWF0aW9ucz17e2Zy
+YW1lcmF0ZT0xMiwNAPAYcz17NCw1LDYsNywzLDEsMn0sbG9vcD1mYWxzZSxuYW1lPSIifX19
 :: afx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTEyIDA2OjU4OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xNSAxNjoxODowMiJdXQ==
+Mi0xNSAyMTo0NToxOCJdXQ==
 :: gfx/
 :: gfx/0.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xNSAxNjoxODowMiIscmV2aXNpb249MTU0NF1dbHo0AGECAADOMgAA8yF7WzBdPXtibXA9cHh1
+Mi0xNSAyMTo0NToxOCIscmV2aXNpb249MTY4OF1dbHo0AGECAADOMgAA8yF7WzBdPXtibXA9cHh1
 AEMgEBAE8FYHEAfAF9AXwAcQB-BWLGZsYWdzPTAscGFuX3gIAMt5PTAsem9vbT04fSw_AP8ZAwbQ
 FtAGECaQVpAWEAagBiAGMEZAZgAGYBZAFmAGQBbAFsAW0AbwJlgAHfAGFycAF2CHUEcgF1AXMCew
 F9A34AfACAB-J8An4AfwFVAAHf8KFl8WgC6wHtAO4F6gToAukD6wbtA_oE7gLksAH-8jFDWwBUAl
@@ -43,7 +42,7 @@ CABET0AmMCaaAB8f8DEA--------------------------------------------------------
 -----4lQbT04fX0=
 :: gfx/ui.gfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTEzIDAyOjA4OjU4Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xNSAxNjoxODowMiIscmV2aXNpb249NzM3XV1sejQAqQQAAOE2AADzIXtbMF09e2JtcD1weHUA
+Mi0xNSAyMTo0NToxOCIscmV2aXNpb249ODgyXV1sejQAqQQAAOE2AADzIXtbMF09e2JtcD1weHUA
 QyAQEATwVgcQB8AX0BfABxAH8FYsZmxhZ3M9MCxwYW5feAgAynk9MCx6b29tPTZ9LD4A8QDBIAEv
 EAEmEQYBDgEQAS4KADMeAQAKAFAuES4BVgYA9gBxLhHeEd4RHpEeER4BdwEGAD8XMRcOAAMv8QGK
 ABzxAMwgDC8cDCYcBgwODBAMLgoAMx4MAAoAUC4cLgxWBgD2AHwuHN4c3hwenB4cHgx3DAYAPxc8
@@ -67,20 +66,20 @@ ABszCxALMyszGxAbMxszCzAbcxtAG2MLYBtDG3AbIxuQS3oAHS-w8DEA--------------------
 ----------------------------------------AFBtPTZ9fQ==
 :: gfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xNSAxNjoxODowMiJdXQ==
+Mi0xNSAyMTo0NToxOCJdXQ==
 :: map/
 :: map/0.map
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xNSAxNjoxODowMiIscmV2aXNpb249MTUwNF1dbHo0AGgAAABYEAAA8Ah7e2JtcD11c2VyZGF0
+Mi0xNSAyMTo0NToxOCIscmV2aXNpb249MTY0OF1dbHo0AGgAAABYEAAA8Ah7e2JtcD11c2VyZGF0
 YSgiaTE2IiwzMgMALyIwAQD--------------------78QgiKSxoaWRkZW49ZmFsc2UscGFuX3g9
 MAgA0nk9MCx0aWxlX2g9MTYKABB3CgCAem9vbT0xfX0=
 :: map/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xNSAxNjoxODowMiJdXQ==
+Mi0xNSAyMTo0NToxOCJdXQ==
 :: sfx/
 :: sfx/0.sfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU1OjM5Iixtb2RpZmllZD0iMjAyNC0x
-Mi0xNSAxNjoxODowMiIscmV2aXNpb249MTQ5Nl1dbHo0AAwCAABfDAAA-zBweHUAAygAAAQABA9A
+Mi0xNSAyMTo0NToxOCIscmV2aXNpb249MTY0MF1dbHo0AAwCAABfDAAA-zBweHUAAygAAAQABA9A
 EAIOAAGgASACoA4ADxAADfDKAQIDQA8PkAQFBgdADJAICQoLQAyQDwwPDQ8ODEAM8P8BAOv6D6oB
 EAYPIBABIAEgAfAAAhACDhABIA8hIAEwD0CQARAA-wvwow8oD--wxg-4Cg--D4AP9w8NAfAJARAG
 DkAAAy-wwzAA------_lH-8BAKzyCcgPQAAPEEAPJw8lDyr--y0g-S0u-S3wcBcApB8n-S4Q-S4e
@@ -92,7 +91,7 @@ DQ8rCwBQJg0FDRQNAIAEDQMNEw0HDRsA9AgpDQMNFQ0DDRgNAw0FDQgNBRANAA0ADQYAFxAMABkA
 CAACCgAFDgCDHzANCQ0JDRkGABcZDAAZCQgAAgoABQ4ABLwAJ-2wCgAf-wEA-9ZQ-----90=
 :: sfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIxOjAzOjIwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xNSAxNjoxODowMiJdXQ==
+Mi0xNSAyMTo0NToxOCJdXQ==
 :: vgfx/
 :: vgfx/0.vgfx
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU3OjMwIixtb2RpZmllZD0iMjAyNC0x
@@ -102,9 +101,9 @@ CQDzDjAsNDB9fSxzaG93PXRydWUsdHlwZT0iZWFyIn0saAATOGgAEjJnAE8zNzc0ZwALFS1oAD8x
 MyxmAApQciJ9fX0=
 :: vgfx/.info.pod
 b64$LS1bW3BvZCxjcmVhdGVkPSIyMDI0LTEyLTExIDIwOjU3OjMwIixtb2RpZmllZD0iMjAyNC0x
-Mi0xNSAxNjoxODowMiJdXQ==
+Mi0xNSAyMTo0NToxOCJdXQ==
 :: animation.lua
---[[pod_format="raw",created="2024-12-15 04:03:37",modified="2024-12-15 16:18:02",revision=98]]
+--[[pod_format="raw",created="2024-12-15 04:03:37",modified="2024-12-15 21:45:18",revision=247]]
 -- AFX File Format Handler
 -- Manages .afx animation files containing multiple named animations
 -- with configurable framerates and playback settings
@@ -176,6 +175,14 @@ function AFX:load(filename)
 	return true
 end
 
+function AFX:get_animation_names()
+    local names = {}
+    for _, anim in ipairs(self.animations) do
+        add(names, anim.name)
+    end
+    return names
+end
+
 -- Animation playback state manager
 AFXPlayer = {}
 
@@ -238,8 +245,59 @@ return {
 	AFX = AFX,
 	AFXPlayer = AFXPlayer
 }
+:: animation_manager.lua
+--[[pod_format="raw",created="2024-12-15 21:42:30",modified="2024-12-15 21:45:18",revision=7]]
+function create_animation_manager(parent, config)
+    local animation_list = {}
+    local selected_animation = nil
+    
+    -- Create the animation list container
+    local container = parent:attach{
+        x = config.x or 8,
+        y = config.y or 120,
+        width = config.width or parent.width - 16,
+        height = config.height or 100,
+        draw = function(self)
+            rectfill(0, 0, self.width, self.height, theme"window_bg")
+            rect(0, 0, self.width, self.height, theme"window_frame")
+            
+            -- Draw animation list
+            local y = 4
+            for i, anim_name in ipairs(animation_list) do
+                local color = theme"text"
+                if anim_name == selected_animation then
+                    color = theme"accent"
+                    rectfill(2, y-1, self.width-2, y+7, theme"selection")
+                end
+                print(anim_name, 4, y, color)
+                y += 10
+            end
+        end,
+        
+        click = function(self, mx, my)
+            local index = flr(my / 10) + 1
+            if index <= #animation_list then
+                selected_animation = animation_list[index]
+                -- Stop current animation if playing
+                if animation_playing then
+                    animation_playing = false
+                    playButton:set_active(false)
+                end
+                -- Load the selected animation
+                afx_player:play(selected_animation)
+                afx_player:stop() -- Don't start playing immediately
+            end
+        end,
+        
+        refresh_list = function(self)
+            animation_list = current_afx:get_animation_names()
+        end
+    }
+    
+    return container
+end
 :: button.lua
---[[pod_format="raw",created="2024-12-13 05:48:40",modified="2024-12-15 16:18:02",revision=528]]
+--[[pod_format="raw",created="2024-12-13 05:48:40",modified="2024-12-15 21:45:18",revision=673]]
 -- Create a hoverable button with consistent behavior and optional active state
 function create_hover_button(parent, config)
     -- Default configuration
@@ -335,11 +393,12 @@ function create_button_group(parent, config)
     }
 end
 :: gui.lua
---[[pod_format="raw",created="2024-12-11 21:26:33",modified="2024-12-15 16:18:02",revision=1822]]
+--[[pod_format="raw",created="2024-12-11 21:26:33",modified="2024-12-15 21:45:18",revision=2029]]
 gui = create_gui()
 
 include "button.lua"
 include "animation.lua"
+include "animation_manager.lua"
 
 local ui = fetch("./gfx/ui.gfx")
 local colors = {
@@ -360,12 +419,61 @@ local menuBar = gui:attach{
     end
 }
 
-local text_bar = menuBar:attach_text_editor{
+local anim_settings = create_button_group(menuBar, {
     x = 8,
-    y = 32,
-    width = menuBar.width - 16,
+    y = 30
+})
+
+local text_bar = anim_settings:attach_text_editor{
+    x = 10,
+    y = 0,
+    width = menuBar.width - 32,
     height = 15,
     block_scrolling = true
+}
+
+text_bar.on_text_changed = function(self)
+    current_animation.name = self.text
+end
+
+local text_label = anim_settings:attach{
+	x = 35,
+	y = 5,
+	width = menuBar.width,
+	height = 32,
+	draw = function(self)
+		print("Animation Name")
+	end
+}
+
+local frame_rate_settings = create_button_group(menuBar, {
+    x = 8,
+    y = 60
+})
+
+local frame_rate_bar = frame_rate_settings:attach_text_editor{
+    x = 10,
+    y = 0,
+    width = menuBar.width - 32,
+    height = 15,
+    block_scrolling = true
+}
+
+frame_rate_bar.on_text_changed = function(self)
+    local rate = tonumber(self.text)
+    if rate and rate > 0 then
+        current_animation.framerate = rate
+    end
+end
+
+local frame_rate_label = frame_rate_settings:attach{
+	x = 40,
+	y = 5,
+	width = menuBar.width,
+	height = 32,
+	draw = function(self)
+		print("Frame Rate")
+	end
 }
 
 local controls = create_button_group(menuBar, {
@@ -396,7 +504,7 @@ local deleteButton = create_hover_button(controls, {
 
 local playback = create_button_group(menuBar, {
     x = 5,
-    y = 54
+    y = 95
 })
 
 local playButton = create_hover_button(playback, {
@@ -414,6 +522,16 @@ local playButton = create_hover_button(playback, {
     end
 })
 
+playButton.onclick = function(self)
+    if not selected_animation then return end
+    
+    if self.active then
+        afx_player:play(selected_animation)
+    else
+        afx_player:stop()
+    end
+end
+
 local loopButton = create_hover_button(playback, {
     x = 96,
     normal_sprite = ui[6].bmp,
@@ -427,6 +545,10 @@ local loopButton = create_hover_button(playback, {
     ondeactivate = function(self)
     	animation_looping = false
     end
+})
+
+local animation_list = create_animation_manager(menuBar, {
+    y = 120
 })
 :: label.png
 b64$iVBORw0KGgoAAAANSUhEUgAAAeAAAAEOCAIAAADe_FMwAAAHXklEQVR4Ae3dMWsbVwDA8Sch
@@ -465,7 +587,7 @@ gEADCDQAAg0g0AAINIBAAyDQAAg0gEADINAAAg2AQAMg0AACDYBAAwg0AAININAACDQAAg0g0AAI
 NIBAAyDQAAg0gEADINAAAg2AQAMg0AACDYBAAwg0AAININAACDQAAg2wev4D6kxi5-vMUHcAAAAQ
 dEVYdExvZGVQTkcAMjAxMTAyMjHjWbbBAAAAAElFTkSuQmCC
 :: main.lua
---[[pod_format="raw",author="Arranged Godly",created="2024-12-11 20:55:39",modified="2024-12-15 16:18:02",notes="A tool for creating afx\nanimation files from gfx files",revision=1737,title="Animation Editor",version="0.1"]]
+--[[pod_format="raw",author="Arranged Godly",created="2024-12-11 20:55:39",modified="2024-12-15 21:45:18",notes="A tool for creating afx\nanimation files from gfx files",revision=1886,title="Animation Editor",version="0.1"]]
 include "gui.lua"
 include "popup.lua"
 include "animation.lua"
@@ -495,13 +617,27 @@ function _init()
 end
 
 function _update()
-	gui:update_all()
-	
-	if popup_open then popup_gui:update_all() end
-	
-	if key("escape") then
-		stop()
-	end
+    gui:update_all()
+    
+    if popup_open then 
+        popup_gui:update_all() 
+    end
+    
+    if animation_playing and afx_player.current_animation then
+        local current_frame = afx_player:update()
+        if current_frame then
+            -- Draw the current frame
+            -- You'll need to implement the actual drawing based on your sprite system
+        else
+            -- Animation finished and not looping
+            animation_playing = false
+            playButton:set_active(false)
+        end
+    end
+    
+    if key("escape") then
+        stop()
+    end
 end
 
 function _draw()
@@ -512,7 +648,7 @@ function _draw()
   
 end
 :: popup.lua
---[[pod_format="raw",created="2024-12-12 17:19:03",modified="2024-12-15 16:18:02",revision=1307]]
+--[[pod_format="raw",created="2024-12-12 17:19:03",modified="2024-12-15 21:45:18",revision=1459]]
 popup_gui = create_gui()
 local ui = fetch("./gfx/ui.gfx")
 settings = {
@@ -572,9 +708,9 @@ local frame_state = {
 
 local Window = popup_gui:attach{
 	x = 32,
-	y = 5,
+	y = 0,
 	width = 256,
-	height = 250,
+	height = 256,
 	draw = function(self)
 		fillBG(self,6)
 	end
@@ -691,78 +827,27 @@ function reset_popup()
 	frame_state:reset()
 	frame = 1
 end
-
-local name_input = Window:attach{
-	x = 10,
-	y = Window.height - 60,
-	width = 100,
-	height = 20,
-	value = "",
-	draw = function(self)
-		rectfill(0, 0, self.width, self.height, 7)
-		print("Name: " .. self.value, 2, 6, 0)
-	end,
-	-- Add input handling for the name field
-	update = function(self)
-		while peektext() do
-			local c = readtext()
-			if c == "\b" then
-				self.value = sub(self.value, 1, #self.value - 1)
-			elseif c == "\r" then
-				-- Handle enter key
-			else
-				self.value = self.value .. c
-			end
-			current_animation.name = self.value
-		end
-	end
-}
-
-local framerate_input = Window:attach{
-	x = 120,
-	y = Window.height - 60,
-	width = 100,
-	height = 20,
-	value = "12",
-	draw = function(self)
-		rectfill(0, 0, self.width, self.height, 7)
-		print("FPS: " .. self.value, 2, 6, 0)
-	end,
-	-- Add input handling for the framerate field
-	update = function(self)
-		while peektext() do
-			local c = readtext()
-			if c == "\b" then
-				self.value = sub(self.value, 1, #self.value - 1)
-			elseif c == "\r" then
-				-- Handle enter key
-			elseif c:match("%d") then
-				self.value = self.value .. c
-			end
-			current_animation.framerate = tonumber(self.value) or 12
-		end
-	end
-}
 :: .info.pod
-b64$LS1bW3BvZCxtb2RpZmllZD0iMjAyNC0xMi0xNSAxNjoxODowMiIsYXV0aG9yPSJBcnJhbmdl
-ZCBHb2RseSIsaWNvbj11c2VyZGF0YSgidTgiLDE2LDE2LCIwMDAwMDAwMDAwMDAwMDAwMDAwMDAw
-MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDcwNzA3MDcwNzAwMDAwMDAwMDAwMDA3MDcwNzAwMDAw
-NzAxMDEwMTA3MDAwMDAwMDAwMDAwMDcwMTA3MDAwMDA3MDEwMTAxMDcwMDAwMDAwMDAwMDAwNzA3
-MDcwMDAwMDcwNzA3MDcwNzAwMDAwMDAwMDAwMDBkMDcwZDAwMDAwZDBkMDcwZDBkMDAwMDAwMDAw
-MDA3MDcwNzA3MDcwNzA3MDcwNzA3MDcwMDAwMDcwMDAwMDcwNzA3MDcwNzA3MDcwNzA3MDcwNzAw
-MDcwNjAwMDAwNzA3MDcwMTAxMDEwNzAxMDEwMTA3MDcwNjA2MDAwMDA3MDcwNzAxMDcwMTA3MDEw
-NzA3MDcwNzA2MDYwMDAwMDcwNzA3MDEwMTAxMDcwMTAxMDcwNzA3MDYwNjAwMDAwNzA3MDcwMTA3
-MDEwNzAxMDcwNzA3MDcwNjA2MDAwMDBkMDcwNzAxMDcwMTA3MDEwMTAxMDcwNzA2MDYwMDAwMDAw
-ZDA3MDcwNzA3MDcwNzA3MDcwNzBkMDcwNjAwMDAwMDAwMGQwNzA3MDcwNzA3MDcwNzA3MDAwZDA3
-MDAwMDAwMDAwMDBkMGQwZDBkMGQwZDBkMGQwMDAwMGQwMCIpLGNyZWF0ZWQ9IjIwMjQtMTItMTEg
-MjA6NTY6MjMiLG5vdGVzPSJBIHRvb2wgZm9yIGNvbnZlcnRpbmcgZ2Z4XG5maWxlcyBpbnRvIGFm
+b64$LS1bW3BvZCxhdXRob3I9IkFycmFuZ2VkIEdvZGx5IixjcmVhdGVkPSIyMDI0LTEyLTExIDIw
+OjU2OjIzIixtb2RpZmllZD0iMjAyNC0xMi0xNSAyMTo0NToxOCIsaWNvbj11c2VyZGF0YSgidTgi
+LDE2LDE2LCIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDcw
+NzA3MDcwNzAwMDAwMDAwMDAwMDA3MDcwNzAwMDAwNzAxMDEwMTA3MDAwMDAwMDAwMDAwMDcwMTA3
+MDAwMDA3MDEwMTAxMDcwMDAwMDAwMDAwMDAwNzA3MDcwMDAwMDcwNzA3MDcwNzAwMDAwMDAwMDAw
+MDBkMDcwZDAwMDAwZDBkMDcwZDBkMDAwMDAwMDAwMDA3MDcwNzA3MDcwNzA3MDcwNzA3MDcwMDAw
+MDcwMDAwMDcwNzA3MDcwNzA3MDcwNzA3MDcwNzAwMDcwNjAwMDAwNzA3MDcwMTAxMDEwNzAxMDEw
+MTA3MDcwNjA2MDAwMDA3MDcwNzAxMDcwMTA3MDEwNzA3MDcwNzA2MDYwMDAwMDcwNzA3MDEwMTAx
+MDcwMTAxMDcwNzA3MDYwNjAwMDAwNzA3MDcwMTA3MDEwNzAxMDcwNzA3MDcwNjA2MDAwMDBkMDcw
+NzAxMDcwMTA3MDEwMTAxMDcwNzA2MDYwMDAwMDAwZDA3MDcwNzA3MDcwNzA3MDcwNzBkMDcwNjAw
+MDAwMDAwMGQwNzA3MDcwNzA3MDcwNzA3MDAwZDA3MDAwMDAwMDAwMDBkMGQwZDBkMGQwZDBkMGQw
+MDAwMGQwMCIpLG5vdGVzPSJBIHRvb2wgZm9yIGNvbnZlcnRpbmcgZ2Z4XG5maWxlcyBpbnRvIGFm
 eCBhbmltYXRpb25zIixydW50aW1lPTEyLHRpdGxlPSJBbmltYXRpb24gRWRpdG9yIix2ZXJzaW9u
-PSIwLjEiLHdvcmtzcGFjZXM9e3tsb2NhdGlvbj0ibWFpbi5sdWEjNiIsd29ya3NwYWNlX2luZGV4
-PTF9LHtsb2NhdGlvbj0iZ3VpLmx1YSM0Iix3b3Jrc3BhY2VfaW5kZXg9MX0se2xvY2F0aW9uPSJw
-b3B1cC5sdWEjNyIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iYnV0dG9uLmx1YSMxMSIs
-d29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0iYW5pbWF0aW9uLmx1YSMxMjkiLHdvcmtzcGFj
-ZV9pbmRleD0xfSx7bG9jYXRpb249ImdmeC8wLmdmeCIsd29ya3NwYWNlX2luZGV4PTJ9LHtsb2Nh
-dGlvbj0iZ2Z4L3VpLmdmeCIsd29ya3NwYWNlX2luZGV4PTJ9LHtsb2NhdGlvbj0ibWFwLzAubWFw
-Iix3b3Jrc3BhY2VfaW5kZXg9M30se2xvY2F0aW9uPSJzZngvMC5zZngiLHdvcmtzcGFjZV9pbmRl
-eD00fX1dXQ==
+PSIwLjEiLHdvcmtzcGFjZXM9e3tsb2NhdGlvbj0ibWFpbi5sdWEjNTEiLHdvcmtzcGFjZV9pbmRl
+eD0xfSx7bG9jYXRpb249Imd1aS5sdWEjNSIsd29ya3NwYWNlX2luZGV4PTF9LHtsb2NhdGlvbj0i
+cG9wdXAubHVhIzkiLHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImJ1dHRvbi5sdWEjMTEi
+LHdvcmtzcGFjZV9pbmRleD0xfSx7bG9jYXRpb249ImFuaW1hdGlvbi5sdWEjNzgiLHdvcmtzcGFj
+ZV9pbmRleD0xfSx7bG9jYXRpb249ImFuaW1hdGlvbl9tYW5hZ2VyLmx1YSM0OSIsd29ya3NwYWNl
+X2luZGV4PTF9LHtsb2NhdGlvbj0iZ2Z4LzAuZ2Z4Iix3b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0
+aW9uPSJnZngvdWkuZ2Z4Iix3b3Jrc3BhY2VfaW5kZXg9Mn0se2xvY2F0aW9uPSJtYXAvMC5tYXAi
+LHdvcmtzcGFjZV9pbmRleD0zfSx7bG9jYXRpb249InNmeC8wLnNmeCIsd29ya3NwYWNlX2luZGV4
+PTR9fV1d
 :: [eoc]
